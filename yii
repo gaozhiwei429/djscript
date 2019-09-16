@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+/**
+ * 定时任务脚本的入口文件
+ * @文件名称: yii
+ * @author jawei
+ * @email gaozhiwei429@sina.com
+ * @Mobile: 15910987706
+ * @Date: 2017-06-06
+ * @Copyright: 2018 北京往全保科技有限公司. All rights reserved.
+ * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
+ */
+
+ini_set('date.timezone','Asia/Shanghai');
+defined('YII_DEBUG') or define('YII_DEBUG', true);
+defined('LOG_FILE_PATH') or define('LOG_FILE_PATH', './runtime/web/data/logs');
+defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',10);
+defined('DMP_IDENTITY') or define('DMP_IDENTITY', 'web');
+
+$host = gethostname();
+if ($host == '10.103.23.34') {
+	defined('YII_ENV') or define('YII_ENV', 'dev');
+} else if ($host == '10.103.22.207') {
+	defined('YII_ENV') or define('YII_ENV', 'prod');
+} else {
+	defined('YII_ENV') or define('YII_ENV', 'dev');
+}
+require(__DIR__ . '/vendor/autoload.php');
+require(__DIR__ . '/vendor/yiisoft/yii2/Yii.php');
+require(__DIR__ . '/backend/config/common/bootstrap.php');
+
+$config = require(__DIR__ . '/backend/config/'.YII_ENV.'/console.php');
+
+$application = new yii\console\Application($config);
+$exitCode = $application->run();
+exit($exitCode);

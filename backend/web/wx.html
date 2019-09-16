@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="utf-8" />
+    <script src="./static/js/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<div>
+    <a href="#" id="J_Pay" onclick="goToPay()">去支付</a>
+</div>
+</body>
+<script type="application/javascript">
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+    function goToPay() {
+
+    }
+    $(function(){
+        var pay_id=GetQueryString("pay_id");
+        var apiUrl = "/pay/pay/get-result";
+        $.ajax({
+            type : "post",  //使用提交的方法 post、get
+            url : apiUrl,   //提交的地址
+            data : {
+                pay_id:pay_id
+            },  //数据
+            async : false,   //配置是否异步操作
+            dataType:"json",//返回数据类型的格式
+            success : function(data){//回调操作
+                //未支付的
+                if(data.code!=0) {
+                    $("#J_Pay").attr("href", GetQueryString("url"));
+                    window.location.href=GetQueryString("url");
+                } else {
+                    $("#J_Pay").attr("href", "#");
+                    $("#J_Pay").html("查看支付结果");
+                    window.postMessage('paySuccess')
+                }
+            }
+        });
+    })
+</script>
+</html>

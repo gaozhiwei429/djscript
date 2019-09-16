@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>财务平台--登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <link href="/favicon.ico" rel="shortcut icon"/>
+    <link href="/static/css/base.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/login.css" rel='stylesheet' type='text/css' />
+    <style>
+        [v-cloak] {
+          display: none;
+        }
+    </style>
+</head>
+<body id="login">
+    <div id="wrapper" v-cloak>
+        <div class="login-logo"><a href="javascript:;" style="font-size: 2rem">停洗欢财务管理系统</a></div>
+        <div class="app-cam">
+            <div id="loginForm">
+                <div class="text">
+            		<input type="text" placeholder="UserName" class="text userName" id="userName" v-model="userName" @keyup.enter="login">
+        		    <input type="password" placeholder="password" class="pwd" id="password" v-model="password" @keyup.enter="login">
+                </div>
+                <div class="submit" @click="login"><input type="submit" value="登录"></div>
+            </div>
+        </div>
+        <div class="copy_layout login"><p>© 2017 Copyright 北京悦畅科技有限公司 版权所有 增值电信业务经营许可证编号：京B2-20170849</p></div>
+    </div>
+<script src="static/js/vue.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    new Vue({
+        el: '#wrapper',
+        data: {
+            userName : '',
+            password : ''
+        },
+        created: function(){
+        },
+        methods: {
+            login:function(){
+                console.log(1111)
+                var _self = this;
+                if(_self.userName == '' || _self.password == ''){
+                    WBL.message('请先输入用户名或密码')
+                }else{
+                    var url = "/manage/user/login";
+                    $.post(url,{'username':_self.userName,'password':_self.password}, function(res){
+                        if(res && res.code==0){
+                            _self.user = res.data;
+                            WBL.cal().set('userName',_self.userName);
+                            WBL.cal().set('userId',_self.user.user_id);
+                            WBL.cal().set('token',_self.user.token);
+                            WBL.cal().set('sign',_self.user.sign);
+                            WBL.message('登录成功',function(){
+                                window.location.href="index.html"
+                            })
+                        }else{
+                            WBL.message(res.msg)
+                        }
+                    },'JSON')
+                }  
+            }
+        }
+    })
+</script>
+</body>
+</html>

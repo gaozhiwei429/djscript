@@ -1,0 +1,1 @@
+2015-12-29 04:47:08: file_put_contents(/data/apps/enterprise/common/phpqrcode/cache/frame_3.dat): failed to open stream: No such file or directory

@@ -1,0 +1,11 @@
+# prevent directory listings
+# Options -Indexes
+# follow symbolic links
+# Options FollowSymlinks
+# RewriteEngine on
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php

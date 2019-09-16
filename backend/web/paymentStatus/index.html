@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.7.2/css/all.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+        #container {
+            padding-top: 50px;
+        }
+        /* #price_container {
+            height: 53px;
+            background-color: #eeeeee;
+        }
+        #price {
+            height: 45px;
+            line-height: 45px;
+            padding-left: 10px;
+            background: #ffffff;
+        }
+        #price span {
+            color: #2e2e2e;
+            font-size: 15px;
+        }
+        #payment_method_title {
+            color: #2e2e2e;
+            font-size: 14px;
+            padding-top: 5px;
+            padding-left: 10px;
+            margin-bottom: 20px;
+        }
+        #payment_method img {
+            width: 40px;
+            height: 40px;
+            vertical-align: middle;
+        }
+        .payment_item {
+            font-size: 14px;
+            position: relative;
+            padding: 10px;
+        }
+        input[type='radio'] {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 19px;
+            right: 20px;
+            opacity: 0.7;
+        } */
+        #pay_button {
+            color: #ffffff;
+            font-size: 16px;
+            /* position: fixed;
+            bottom: 50%;
+            left: 0; */
+            width: 50%;
+            height: 45px;
+            line-height: 45px;
+            margin: 40px auto;
+            border-radius: 5px;
+            text-align: center;
+            background: #ff5001;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- <div id="price_container">
+            <div id="price">
+                <span id="totalPrice">商品总价</span>
+            </div>
+        </div>
+        <div id="payment_method_title">
+            <span>选择支付方式:</span>
+        </div>
+        <div id="payment_method">
+            <div class="payment_item" onclick="_choosePaymentMethod(1)">
+                <img src="./alipay.png" alt="">&nbsp;&nbsp;&nbsp;
+                <span>支付宝支付</span>
+                <input type="radio" name="paymentMethod" id="alipay">
+            </div>
+            <div class="payment_item" onclick="_choosePaymentMethod(2)">
+                <img src="./wechat.png" alt="">&nbsp;&nbsp;&nbsp;
+                <span>微信支付</span>
+                <input type="radio" name="paymentMethod" id="wechat" checked>
+            </div>
+        </div> -->
+        <div id="paySuccessIcon" style="display: none; font-size: 50px; color: #ffffff; text-align: center; background: #3c90f9; width: 80px; height: 80px; line-height: 80px; border-radius: 40px; margin: 0 auto;">
+            <i class="fa fa-check" aria-hidden="true"></i>
+        </div>
+        <div id="payingIcon" style="display: none; font-size: 45px; color: #ffffff; text-align: center; background: #3c90f9; width: 80px; height: 80px; line-height: 80px; border-radius: 40px; margin: 0 auto;">
+            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+        </div>
+        <div id="payFailIcon" style="display: none; font-size: 45px; color: #ffffff; text-align: center; background: #3c90f9; width: 80px; height: 80px; line-height: 80px; border-radius: 40px; margin: 0 auto;">
+            <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
+        <div id="paySuccess" style="display: none; text-align: center; font-size: 20px; margin: 30px 0;">
+            <span>支付完成</span>
+        </div>
+        <div id="paying" style="display: none; text-align: center; font-size: 20px; margin: 30px 0;">
+            <span>待支付</span>
+        </div>
+        <div id="payFail" style="display: none; text-align: center; font-size: 20px; margin: 30px 0;">
+            <span>支付失败</span>
+        </div>
+        <div id="pay_button" onclick="_payBalance()" style="display: none;">
+            <span>确认支付</span>
+        </div>
+        <div id="pay_button_finsh" onclick="_cancel()" style="display: none;">
+            <span>已完成</span>
+        </div>
+    </div>
+    <script>
+        var data = ''
+        var time = 8
+
+        function getPaymentStatus() {
+            $.ajax({
+                type: "POST",
+                headers: {
+                    userid: data.userInfo && data.userInfo.userid || '',
+                    token: data.userInfo && data.userInfo.token || '',
+                    sign: data.userInfo && data.userInfo.sign || ''
+                },
+                url: 'http://api.wbaole.com/pay/pay/get-pay-result',
+                data: {
+                    pay_id: data.pay_id
+                },
+                success: function(res) {
+                    _response = JSON.parse(res)
+                    if (+_response.data.status === 20) {
+
+                        window.postMessage(JSON.stringify({
+                            uri: 'OperationSuccess',
+                            order_ids: _response.data.order_ids || ''
+                        }))
+
+                        document.getElementById("paySuccessIcon").style.display="block";
+                        document.getElementById("paySuccess").style.display="block";
+                        document.getElementById("pay_button_finsh").style.display="block";
+
+                        document.getElementById("payingIcon").style.display="none";
+                        document.getElementById("paying").style.display="none";
+                        document.getElementById("pay_button").style.display="none";
+
+                        document.getElementById("payFailIcon").style.display="none";
+                        document.getElementById("payFail").style.display="none";
+
+                        window.postMessage(JSON.stringify({
+                            uri: 'mineOrders'
+                        }))
+                    }
+                    if (+_response.data.status === 10) {
+                        document.getElementById("payingIcon").style.display="block";
+                        document.getElementById("paying").style.display="block";
+                        document.getElementById("pay_button").style.display="block";
+
+                        document.getElementById("paySuccessIcon").style.display="none";
+                        document.getElementById("paySuccess").style.display="none";
+                        document.getElementById("pay_button_finsh").style.display="none";
+
+                        document.getElementById("payFailIcon").style.display="none";
+                        document.getElementById("payFail").style.display="none";
+                    }
+                    if (+_response.data.status === 0) {
+                        document.getElementById("payFailIcon").style.display="block";
+                        document.getElementById("payFail").style.display="block";
+                        document.getElementById("pay_button").style.display="block";
+
+                        document.getElementById("paySuccessIcon").style.display="none";
+                        document.getElementById("paySuccess").style.display="none";
+                        document.getElementById("pay_button_finsh").style.display="none";
+
+                        document.getElementById("payingIcon").style.display="none";
+                        document.getElementById("paying").style.display="none";
+                    }
+                }
+            });
+        }
+
+        function initData(extraData) {
+            data = extraData || ''
+
+            setInterval(function() {
+                getPaymentStatus()
+            }, 1000);
+        }
+
+        function _payBalance() {
+            window.location.href = data.payUrl && data.payUrl.replace('\\', '');
+        }
+
+        function _cancel() {
+            window.postMessage(JSON.stringify({
+                uri: 'Mine'
+            }))
+        }
+
+        // $(document).ready(function(){
+        //     alert(JSON.stringify(orderData))
+        // })
+
+        // function _choosePaymentMethod(type) {
+        //     payType = type
+        // }
+
+        // function _pay(pay_id) {
+        //     $.ajax({
+        //         type: "POST",
+        //         url: 'http://api.wbaole.com/pay/pay/pay',
+        //         data: {
+        //             pay_id: pay_id
+        //         },
+        //         success: function(res){
+        //             window.location.href=res;
+        //         }
+        //     });
+        // }
+
+        // function _payBalance() {
+        //     var ids = orderData.order_id ? orderData.map((item) => {
+        //         const id = item.id || item.order_id;
+        //         return parseInt(id, 10);
+        //     }) : [];
+
+        //     if (orderData.order_id || orderData.length > 0) {
+        //         $.ajax({
+        //             type: "POST",
+        //             url: '../pay/pay/pay-balance',
+        //             headers: {
+        //                 userid: orderData.userInfo && orderData.userInfo.user_id || '',
+        //                 token: orderData.userInfo && orderData.userInfo.token || '',
+        //                 sign: orderData.userInfo && orderData.userInfo.sign || ''
+        //             },
+        //             data: {
+        //                 order_id: orderData.order_id || [[...ids]],
+        //                 address_id: orderData.address_id,
+        //                 pay_type: payType,
+        //                 pay_from: 1
+        //             },
+        //             success: function(res) {
+        //                 alert(res)
+        //                 _pay(res);
+        //             },
+        //             error: function(err) {
+        //                 alert('err')
+        //             }
+        //         });
+        //     } else {
+        //         $.ajax({
+        //             type: "POST",
+        //             url: '../order/order/add-goods-car',
+        //             data: {
+        //                 project_id: orderData.productId,
+        //                 buy_number: orderData.buyNum,
+        //                 pay_from: 1
+        //             },
+        //             success: function(res){
+        //                 alert(res)
+        //                 $.ajax({
+        //                     type: "POST",
+        //                     url: '../pay/pay/pay-balance',
+        //                     data: {
+        //                         order_id: orderData.order_id || [[...ids]],
+        //                         address_id: orderData.address_id,
+        //                         pay_type: payType,
+        //                         pay_from: 1
+        //                     },
+        //                     success: function(res){
+        //                         _pay(res);
+        //                     }
+        //                 });
+        //             }
+        //         });
+        //     }
+        // }
+    </script>
+</body>
+</html>

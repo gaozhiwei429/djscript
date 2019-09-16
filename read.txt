@@ -1,0 +1,29 @@
+backend   部署项目
+
+      assets   web 设置
+     
+      config 配置文件
+
+	  commone 公用配置文件
+          prod  正式配置文件
+          dev   开发配置文件
+
+      controller  控制器文件
+
+      model  模型文件
+
+      service   基于模型与控制器中间业务处理文件
+ 
+      view  视图
+
+      web  前端使用
+   
+
+source   使用模板项目的公共模块（不在基础设施公共模块里）
+
+infrastructure   基础设施公共模块与业务无关（以模块的形式输出供部署项目调用）
+
+appcomponents  与业务相关的模块
+
+
+vendor   三方compose安装包
