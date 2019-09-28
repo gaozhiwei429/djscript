@@ -1,7 +1,7 @@
 <?php
 /**
- * 运营平台分类管理表
- * @文件名称: TypeModel.php
+ * 知识库管理模型
+ * @文件名称: KnowledgeModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,13 +14,12 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class TypeModel extends BaseModel
+class KnowledgeModel extends BaseModel
 {
     const ON_LINE_STATUS = 1;//已上线
-    const BEFORT_STATUS = 0;//待上线
-    const OVER_STATUS = 2;//已下线
+    const DELECT_STATUS = 0;//待上线
     public static function tableName() {
-        return '{{%type}}';
+        return '{{%knowledge}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -28,7 +27,7 @@ class TypeModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByParams($params){
+    public function getInfoByValue($params){
         return $this->getOne($params);
     }
     /**
@@ -96,7 +95,7 @@ class TypeModel extends BaseModel
             return $data;
 //            $query->createCommand()->getRawSql();
         } catch (BaseException $e) {
-            DmpLog::warning('getListData_TypeModel_error', $e);
+            DmpLog::warning('getListData_knowledgeModel_error', $e);
             return [];
         }
     }
@@ -120,7 +119,7 @@ class TypeModel extends BaseModel
 //                return $query->createCommand()->getRawSql();
             return  $query->count();
         } catch (BaseException $e) {
-            DmpLog::warning('getCount_TypeModel_error', $e);
+            DmpLog::warning('getCount_knowledgeModel_error', $e);
             return 0;
         }
     }
