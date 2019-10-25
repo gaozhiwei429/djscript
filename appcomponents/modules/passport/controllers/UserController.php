@@ -37,7 +37,7 @@ class UserController extends UserBaseController
     public function actionLogin() {
         $username = trim(Yii::$app->request->post('username', null));
         $password = trim(Yii::$app->request->post('password', null));
-        $source = intval(Yii::$app->request->post('source', 1));
+        $source = intval(Yii::$app->request->post('source', 0));
         $device_code = trim(Yii::$app->request->post('device_code', ""));
         $version = trim(Yii::$app->request->post('version', 1.0));
         if(!empty($username)) {

@@ -47,12 +47,13 @@ class UserBaseController extends BaseController
         $user_id = $headers->get('userid', Yii::$app->request->post('userid', 0));
         $token = $headers->get('token', Yii::$app->request->post('token', null));
         $sign = $headers->get('sign', Yii::$app->request->post('sign', null));
+        $source = $headers->get('source', Yii::$app->request->post('source', 0));
         $type = $headers->get('type', Yii::$app->params['user']['type']);
         if(empty($user_id) || empty($token) || empty($sign) || empty($type)) {
             return BaseService::returnErrData([], 5001, "请求参数异常");
         }
         $passportService = new PassportService();
-        $verifyToken = $passportService->verifyToken($user_id, $token, $sign, $type);
+        $verifyToken = $passportService->verifyToken($user_id, $token, $sign, $type, $source);
         if(!BaseService::checkRetIsOk($verifyToken)) {
             return $verifyToken;
         }

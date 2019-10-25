@@ -63,7 +63,7 @@ class PassportService extends BaseService
      * @param int $type
      * @return array
      */
-    public function checkUserToken($userId, $token, $type=1) {
+    public function checkUserToken($userId, $token, $type=1, $source=1) {
         $whereParams = [];
         if(!$userId || !$token || !$type) {
             return BaseService::returnErrData([], 5001, "请求参数异常");
@@ -74,6 +74,7 @@ class PassportService extends BaseService
         if($type) {
             $whereParams[] = ['=', 'type', $type];
         }
+        $whereParams[] = ['=', 'source', $source];
 
         $userTokenModel = new UserLoginTokenModel();
         $userTokenInfo = $userTokenModel->getInfoByParams($whereParams);
@@ -102,14 +103,14 @@ class PassportService extends BaseService
      * @param $type
      * @return array
      */
-    public function verifyToken($userId, $token, $sign, $type) {
+    public function verifyToken($userId, $token, $sign, $type, $source=1) {
         $verifySignRet = $this->createSign($userId, $token);
         if(BaseService::checkRetIsOk($verifySignRet)) {
             $verifySign = BaseService::getRetData($verifySignRet);
             if($verifySign != $sign) {
                 return BaseService::returnErrData('', 5001, "请求参数无效");
             }
-            $ret = $this->checkUserToken($userId, $token, $type);
+            $ret = $this->checkUserToken($userId, $token, $type, $source);
             if(BaseService::checkRetIsOk($ret)) {
                 $userTokenInfo = BaseService::getRetData($ret);
                 if(!empty($userTokenInfo)) {
@@ -673,7 +674,7 @@ class PassportService extends BaseService
      */
     public function qrcodeLogin($userid, $token, $device_code, $source=4) {
         $type = Yii::$app->params['user']['type'];
-        $checkoutTokenRet = $this->checkUserToken($userid, $token, $type);
+        $checkoutTokenRet = $this->checkUserToken($userid, $token, $type, $source);
         if(BaseService::checkRetIsOk($checkoutTokenRet)) {
             return $this->saveLoginToken($userid, $token, $type, $overdueTimeVel = 0, $source, $device_code);
         }
