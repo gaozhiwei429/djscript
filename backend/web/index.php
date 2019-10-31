@@ -14,7 +14,7 @@ header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Headers:Authorization');
 header("Access-Control-Allow-Methods: GET, POST, OPTION, DELETE");
 header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Headers: Content-Type, X-Requested-With, Cache-Control,Authorization,userid,token,sign,source");
+header("Access-Control-Allow-Headers: Content-Type, X-Requested-With, Cache-Control,Authorization,userid,token,sign,source,lang,version");
 
 // comment out the following two lines when deployed to production
 defined('YII_DEBUG') or define('YII_DEBUG', true);
