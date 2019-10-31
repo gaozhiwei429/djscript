@@ -37,11 +37,51 @@ class BannerService extends BaseService
         $Common = new Common();
         $offset = $Common->getOffset($limit, $p);
         $carModel = new BannerModel();
-        $params[] = ['=', 'status', $carModel::ON_LINE_STATUS];
         $cityList = $carModel->getListData($params, $orderBy, $offset, $limit, $fied);
         if(!empty($cityList)) {
             return BaseService::returnOkData($cityList);
         }
         return BaseService::returnErrData([], 500, "暂无数据");
+    }
+    /**
+     * 获取banner详情数据
+     * @param $params
+     * @return array
+     */
+    public function getInfo($params) {
+        if(empty($params)) {
+            return BaseService::returnErrData([], 55000, "请求参数异常");
+        }
+        $bannerModel = new BannerModel();
+        $bannerInfo = $bannerModel->getInfoByValue($params);
+        if(!empty($bannerInfo)) {
+            return BaseService::returnOkData($bannerInfo);
+        }
+        return BaseService::returnErrData([], 500, "暂无数据");
+    }
+    /**
+     * 编辑banner详情数据
+     * @param $params
+     * @return array
+     */
+    public function editInfo($dataInfo) {
+        if(empty($dataInfo)) {
+            return BaseService::returnErrData([], 56900, "请求参数异常");
+        }
+        $bannerModel = new BannerModel();
+        $id = isset($dataInfo['id']) ? $dataInfo['id'] : 0;
+        $editRest = 0;
+        if($id) {
+            if(isset($dataInfo['id'])) {
+                unset($dataInfo['id']);
+            }
+            $editRest = $bannerModel->updateInfo($id, $dataInfo);
+        } else {
+            $editRest = $bannerModel->addInfo($dataInfo);
+        }
+        if(!empty($editRest)) {
+            return BaseService::returnOkData($editRest);
+        }
+        return BaseService::returnErrData([], 500, "操作异常");
     }
 }

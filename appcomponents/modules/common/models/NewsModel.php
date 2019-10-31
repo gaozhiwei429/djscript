@@ -1,7 +1,7 @@
 <?php
 /**
- * 运营平台banner管理表
- * @文件名称: BannerModel.php
+ * 运营平台新闻管理表
+ * @文件名称: NewsModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,12 +14,12 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class BannerModel extends BaseModel
+class NewsModel extends BaseModel
 {
     const ON_LINE_STATUS = 1;//已上线
     const BEFORT_STATUS = 0;//已下线
     public static function tableName() {
-        return '{{%banner}}';
+        return '{{%news}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -27,8 +27,8 @@ class BannerModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByValue($params){
-        return $this->getOne($params);
+    public function getInfoByValue($params,$field=['*']){
+        return $this->getOne($params,$field);
     }
     /**
      * 获取数据集
@@ -84,6 +84,13 @@ class BannerModel extends BaseModel
     public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
         try {
             $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
+            if(!empty($dataList)) {
+                foreach($dataList as &$dataInfo) {
+                    if(isset($dataInfo['pic_url'])) {
+                        $dataInfo['pic_url'] = json_decode($dataInfo['pic_url'], true);
+                    }
+                }
+            }
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,
@@ -95,7 +102,6 @@ class BannerModel extends BaseModel
             return $data;
 //            $query->createCommand()->getRawSql();
         } catch (BaseException $e) {
-            DmpLog::warning('getListData_bannerModel_error', $e);
             return [];
         }
     }
@@ -119,7 +125,6 @@ class BannerModel extends BaseModel
 //                return $query->createCommand()->getRawSql();
             return  $query->count();
         } catch (BaseException $e) {
-            DmpLog::warning('getCount_bannerModel_error', $e);
             return 0;
         }
     }
@@ -133,19 +138,17 @@ class BannerModel extends BaseModel
         try {
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
-            $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//banner名称
+            $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//名称
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->news_id = isset($addData['news_id']) ? intval($addData['news_id']) : 0;
-            $thisModel->type = isset($addData['type']) ? intval($addData['type']) : 1;
+            $thisModel->type_id = isset($addData['type_id']) ? intval($addData['type_id']) : 0;
+            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
-            $thisModel->pic_url = isset($addData['pic_url']) ? trim($addData['pic_url']) : ""; //图片链接
-            $thisModel->url = isset($addData['url']) ? trim($addData['url']) : ""; //图片链接
-            $thisModel->overdue_time = isset($addData['overdue_time']) ? trim($addData['overdue_time']) : date("Y-m-d H:i:s",strtotime("+1years",time())); //失效时间
+            $thisModel->content = isset($addData['content']) ? trim($addData['content']) : ""; //文章内容
+            $thisModel->pic_url = isset($addData['pic_url']) ? trim($addData['pic_url']) : json_encode([]); //文章图片
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
         } catch (BaseException $e) {
-            DmpLog::error('insert_banner_model_error', $e);
             return false;
         }
     }
@@ -167,7 +170,6 @@ class BannerModel extends BaseModel
             }
             return false;
         } catch (BaseException $e) {
-            DmpLog::error('update_banner_model_error', $e);
             return false;
         }
     }
