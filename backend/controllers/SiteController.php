@@ -12,16 +12,21 @@
  */
 
 namespace backend\controllers;
+use source\manager\BaseService;
 use yii\base\Controller;
 use Yii;
 
 class SiteController extends Controller {
     public function beforeAction($action) {
-        $url = Yii::$app->request->hostInfo."/index.html";
-        header("Location: $url");
+        return parent::beforeAction($action);
     }
     public function actionIndex() {
-        $url = Yii::$app->request->hostInfo."/index.html";
-        header("Location: $url");
+        return BaseService::returnErrData([], 500, "请求接口不存在");
+    }
+    /**
+     * 异常路由的请求
+     */
+    public function actionError() {
+        return BaseService::returnErrData([], 500, "请求接口不存在");
     }
 }

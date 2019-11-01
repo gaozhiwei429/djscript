@@ -45,7 +45,7 @@ class NoticeController extends BaseController
         $noticeService = new NoticeService();
         $params = [];
         $params[] = ['!=', 'status', 0];
-        return $noticeService->getList($params, ['id'=>SORT_DESC, 'sort'=>SORT_DESC, 'type'=>SORT_DESC], $page, $size,['id','title']);
+        return $noticeService->getList($params, ['id'=>SORT_DESC, 'sort'=>SORT_DESC], $page, $size,['id','title']);
     }
     /**
      * 公告详情数据获取

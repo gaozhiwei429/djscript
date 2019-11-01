@@ -85,4 +85,31 @@ class TypeService extends BaseService
         }
         return BaseService::returnErrData([], 500, "操作异常");
     }
+	/**
+     * 获取分类结构树
+     * @param array $params
+     * @param array $orderBy
+     * @param int $p
+     * @param int $limit
+     * @param array $fied
+     * @param bool $index
+     * @return array
+     */
+    public function getTree($params = [], $orderBy = [], $p = 1, $limit = -1, $fied=['*'], $index=false) {
+        $Common = new Common();
+        $offset = $Common->getOffset($limit, $p);
+        $typeModel = new TypeModel();
+        $typeList = $typeModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
+        if(!empty($typeList)) {
+            if(!$index) {
+                return BaseService::returnOkData($typeList);
+            }
+            if(isset($typeList['dataList']) && !empty($typeList['dataList'])) {
+                $dataList = Common::getTree($typeList['dataList']);
+                return BaseService::returnOkData($dataList);
+            }
+            return BaseService::returnOkData($typeList);
+        }
+        return BaseService::returnErrData([], 53700, "获取树状结构数据不存在");
+    }
 }
