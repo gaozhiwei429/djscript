@@ -46,6 +46,32 @@ class UserController extends UserBaseController
         }
         return BaseService::returnErrData([], 500, "用户名或密码不能为空");
     }
+
+    /**
+     * 用户登陆接口
+     * @return array|mixed
+     */
+    public function actionLoginByCode() {
+        $username = trim(Yii::$app->request->post('username', null));
+        $mobileCode = trim(Yii::$app->request->post('mobileCode', null));
+        $source = intval(Yii::$app->request->post('source', 0));
+        $device_code = trim(Yii::$app->request->post('device_code', ""));
+        $version = trim(Yii::$app->request->post('version', 1.0));
+        if(empty($mobileCode)) {
+            return BaseService::returnErrData([], 56100, "短信验证码不能为空");
+        }
+        if(empty($username)) {
+            return BaseService::returnErrData([], 56100, "短信验证码不能为空");
+        }
+
+        $smsService = new SmsService();
+        $smsRet = $smsService->verifyCode($username, $mobileCode);
+        if(!BaseService::checkRetIsOk($smsRet)) {
+            return $smsRet;
+        }
+        $passportService = new PassportService();
+        return $passportService->loginByUsername($username, $source, $version, $device_code);
+    }
     /**
      * 用户注册接口
      * @return array

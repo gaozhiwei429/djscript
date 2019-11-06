@@ -152,7 +152,6 @@ class NewsModel extends BaseModel
             return false;
         }
     }
-
     /**
      * 更新信息数据
      * @param int $id ID

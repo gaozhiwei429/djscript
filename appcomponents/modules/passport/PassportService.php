@@ -324,6 +324,44 @@ class PassportService extends BaseService
         return $ret;
     }
     /**
+     * 用户名登录
+     * @param $username
+     * @param $password
+     * @param $version 当前系统的版本号
+     * @return array|mixed
+     */
+    public function loginByUsername($username, $source=1, $version="1.0", $device_code="") {
+        $type = Yii::$app->params['user']['type'];
+        $overduetime = Yii::$app->params['user']['overduetime'];
+        //检查是否是手机号
+        $checkMobile = Common::pregPhonNum($username);
+        if(!$checkMobile) {
+            return BaseService::returnErrData([], 500, '请输入正确个手机号');
+        }
+        $ret = $this->getUserDataInfoByUserName($username);
+        if(!BaseService::checkRetIsOk($ret)) {
+            return $ret;
+        }
+        $userInfo = BaseService::getRetData($ret);
+        //保存登录状态
+        $token = Common::getRandChar(32);
+        $ret = $this->saveLoginToken($userInfo['id'], $token, $type, $overduetime, $source, $device_code);
+        if(BaseService::checkRetIsOk($ret)) {
+            $result = BaseService::getRetData($ret);
+//            $versionRet = $this->getUserVersion($username);
+//            if(BaseService::checkRetIsOk($versionRet)) {
+//                $version = BaseService::getRetData($versionRet);
+//            }
+            $result['username'] = $username;
+            $result['version'] = $version;
+            if($version) {
+                $this->addUserVersion($username, $version);
+            }
+            return BaseService::returnOkData($result);
+        }
+        return $ret;
+    }
+    /**
      * 添加版本号缓存
      * @param $username
      * @param string $version

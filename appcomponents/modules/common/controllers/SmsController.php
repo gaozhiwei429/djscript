@@ -2,6 +2,7 @@
 
 namespace appcomponents\modules\common\controllers;
 use appcomponents\modules\common\SmsService;
+use appcomponents\modules\passport\PassportService;
 use source\controllers\BaseController;
 use source\libs\Common;
 use source\libs\DmpLog;
@@ -26,6 +27,11 @@ class SmsController extends BaseController
             $mobile = trim(Yii::$app->request->post('mobile', null));
             if(empty($mobile)) {
                 return BaseService::returnErrData([], 53000, "请求参数异常");
+            }
+            $passportService = new PassportService();
+            $checkUserRet = $passportService->checkUserExist($mobile);
+            if(!BaseService::checkRetIsOk($checkUserRet)) {
+                return $checkUserRet;
             }
             $templateId = Yii::$app->params['sms']['tencent']['templateIdArr']['loginSymId'];
             $overduetime = Yii::$app->params['sms']['overduetime'];
