@@ -301,13 +301,13 @@ class Common
      * @param $items
      * @return array
      */
-    public static function generateTree($items){
+    public static function generateTree($items ,$indexkey="id", $parentkey='parent_id'){
         $tree = array();
         foreach($items as $item){
-            if(isset($items[$item['parent_id']])){
-                $items[$item['parent_id']]['son'][] = &$items[$item['id']];
+            if(isset($item[$parentkey]) && isset($items[$item[$parentkey]])){
+                $items[$item[$parentkey]]['son'][] = &$items[$item[$indexkey]];
             }else{
-                $tree[] = &$items[$item['id']];
+                $tree[$item[$indexkey]] = &$items[$item[$indexkey]];
             }
         }
         return $tree;
