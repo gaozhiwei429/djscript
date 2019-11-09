@@ -108,5 +108,23 @@ class UserUtilizationService extends BaseService
         $dataInfo['status'] = 1;
         return $this->editInfo($dataInfo);
     }
-
+    /**
+     * 编辑首页显示功能集合
+     * @param $user_id
+     * @param array $utilizationIds
+     * @return array
+     */
+    public function getUserUtilizationData($user_id) {
+        if(empty($user_id)) {
+            return BaseService::returnErrData([], 54700, "请求参数异常");
+        }
+        $utilizationParams[] = ['=', 'user_id', $user_id];
+        $utilizationParams[] = ['=', 'status', 1];
+        $utilizationRet = $this->getInfo($utilizationParams);
+        $utilizationData = BaseService::getRetData($utilizationRet);
+        if(isset($utilizationData['utilization_ids']) && $utilizationData['utilization_ids']){
+            return BaseService::returnOkData(json_decode($utilizationData['utilization_ids'], true));
+        }
+        return BaseService::returnErrData([], 512900, "请求数据不存在");
+    }
 }

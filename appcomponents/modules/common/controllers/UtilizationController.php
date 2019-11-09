@@ -38,7 +38,16 @@ class UtilizationController extends UserBaseController
         $params = [];
         $params[] = ['!=', 'status', 0];
         if($type) {
-            $params[] = ['=', 'type', $type];
+            if($type==1 && $this->user_id) {
+                $userUtilizationService = new UserUtilizationService();
+                $userUtilizationDataRet = $userUtilizationService->getUserUtilizationData($this->user_id);
+                if(BaseService::checkRetIsOk($userUtilizationDataRet)) {
+                    $utilization_ids = BaseService::getRetData($userUtilizationDataRet);
+                    $params[] = ['in', 'id', $utilization_ids];
+                }
+            } else {
+                $params[] = ['=', 'type', $type];
+            }
         }
         return $utilizationService->getList($params, ['sort'=>SORT_DESC], $page, $size,['id','title','icon','type']);
     }
