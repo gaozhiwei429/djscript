@@ -30,4 +30,21 @@ class TypeController extends BaseController
         $params[] = ['=', 'status', 1];
         return $typeService->getTree($params, ['sort'=>SORT_DESC,'id'=>SORT_DESC], 1, -1, ['id','title','use_id','parent_id'], true);
     }
+
+    /**
+     * 获取树状管理结构数据
+     * @return array
+     */
+    public function actionGetTrees() {
+        $page = intval(Yii::$app->request->post('p', 1));
+        $size = intval(Yii::$app->request->post('size', -1));
+        $parent_id = intval(Yii::$app->request->post('parent_id', 0));
+        $typeService = new TypeService();
+        $params = [];
+        $params[] = ['=', 'status', 1];
+        if(!empty($parent_id)) {
+            $params[] = ['=', 'parent_id', $parent_id];
+        }
+        return $typeService->getTree($params, ['id'=>SORT_DESC, 'sort'=>SORT_DESC], $page, $size,  ['id','title','use_id','parent_id'], true);
+    }
 }

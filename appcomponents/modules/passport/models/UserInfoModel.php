@@ -40,6 +40,13 @@ class UserInfoModel extends BaseModel {
             $thisModel->email = isset($addData['email']) ? trim($addData['email']) : "";
             $thisModel->qq = isset($addData['qq']) ? trim($addData['qq']) : "";
             $thisModel->wchat = isset($addData['wchat']) ? trim($addData['wchat']) : "";
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : 1;
+            $thisModel->user_status = isset($addData['user_status']) ? intval($addData['user_status']) : 0;
+            $thisModel->work_status = isset($addData['work_status']) ? intval($addData['work_status']) : 0;
+            $thisModel->education = isset($addData['education']) ? intval($addData['education']) : 0;
+            $thisModel->join_organization_date = isset($addData['join_organization_date']) ? trim($addData['join_organization_date']) : "";
+            $thisModel->native_place = isset($addData['native_place']) ? trim($addData['native_place']) : "";
+            $thisModel->apply_organization_date = isset($addData['apply_organization_date']) ? trim($addData['apply_organization_date']) : "";
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
         } catch (BaseException $e) {

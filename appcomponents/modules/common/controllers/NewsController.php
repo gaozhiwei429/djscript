@@ -11,6 +11,7 @@
  */
 namespace appcomponents\modules\common\controllers;
 use appcomponents\modules\common\NewsService;
+use appcomponents\modules\common\TypeService;
 use source\controllers\BaseController;
 use source\manager\BaseService;
 use Yii;
@@ -29,7 +30,7 @@ class NewsController extends BaseController
         $newsService = new NewsService();
         $params = [];
         $params[] = ['!=', 'status', 0];
-        return $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['pic_url','uuid','title','type_id']);
+        return $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['pic_url','uuid','title','type_id','create_time']);
     }
     /**
      * 资讯列表数据获取
@@ -43,9 +44,25 @@ class NewsController extends BaseController
         $params = [];
         $params[] = ['!=', 'status', 0];
         if($type_id) {
-            $params[] = ['=', 'type_id', $type_id];
+            $typeService = new TypeService();
+            $typeParams[] = ['=', 'id', $type_id];
+            $typeRet = $typeService->getInfo($typeParams);
+            $typeInfo = BaseService::getRetData($typeRet);
+            if(isset($typeInfo['parent_id']) && $typeInfo['parent_id']==0) {
+                $listParams[] = ['=', 'parent_id', $typeInfo['id']];
+                $typeListRet = $typeService->getList($listParams,[], 1, -1,['id']);
+                $typeList = BaseService::getRetData($typeListRet);
+                $typeDataList = isset($typeList['dataList']) ? $typeList['dataList'] : [];
+                if(!empty($typeDataList)) {
+                    $typeIds = array_column($typeDataList, 'id');
+                    $typeIds[] = $type_id;
+                    $params[] = ['in', 'type_id', $typeIds];
+                }
+            } else {
+                $params[] = ['=', 'type_id', $type_id];
+            }
         }
-        return $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['pic_url','uuid','title','type_id']);
+        return $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['pic_url','uuid','title','type_id','create_time']);
     }
 
     /**

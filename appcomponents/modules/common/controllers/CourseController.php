@@ -69,65 +69,15 @@ class CourseController extends BaseController
         $params[] = ['=', 'uuid', $uuid];
         return $newsService->getInfo($params);
     }
+
     /**
-     * 资讯详情数据编辑
+     * 获取学习课程相关的分类
      * @return array
      */
-    public function actionEdit() {
-        if (!isset($this->user_id) || !$this->user_id) {
-            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
-        }
-        $id = intval(Yii::$app->request->post('id', 0));
-        $title = trim(Yii::$app->request->post('title', ""));
-        $content = trim(Yii::$app->request->post('content', ""));
-        $sort = intval(Yii::$app->request->post('sort', 0));
-        $status = intval(Yii::$app->request->post('status',  0));
-        $type_id = intval(Yii::$app->request->post('type_id',  0));
-        $newsService = new NewsService();
-        $postData = Yii::$app->request->post();
-        $pic_urlArr = [];
-        foreach($postData as $k=>$pic_url) {
-            if(strstr($k,"pic_url")) {
-                $pic_urlArr[] = $pic_url;
-            }
-        }
-        if(empty($title)) {
-            return BaseService::returnErrData([], 55900, "请求参数异常，请填写完整");
-        }
-        $dataInfo = [];
-        if(!empty($pic_urlArr)) {
-            $dataInfo['pic_url'] = $pic_urlArr ? json_encode($pic_urlArr) : "[]";
-        }
-        if(!empty($user_id)) {
-            $dataInfo['user_id'] = $user_id;
-        }
-        if(!empty($title)) {
-            $dataInfo['title'] = $title;
-        } else {
-            $dataInfo['title'] = "";
-        }
-        if(!empty($content)) {
-            $dataInfo['content'] = $content;
-        } else {
-            $dataInfo['content'] = "";
-        }
-        if(!empty($sort)) {
-            $dataInfo['sort'] = $sort;
-        } else {
-            $dataInfo['sort'] = 0;
-        }
-        if(!empty($news_type_id)) {
-            $dataInfo['type_id'] = $type_id;
-        }
-        if(!empty($id)) {
-            $dataInfo['id'] = $id;
-        } else {
-            $dataInfo['id'] = 0;
-        }
-        if(empty($dataInfo)) {
-            return BaseService::returnErrData([], 58000, "提交数据有误");
-        }
-        $dataInfo['status'] = $status;
-        return $newsService->editInfo($dataInfo);
+    public function actionGetTreeType() {
+        $courseTypeService = new CourseTypeService();
+        $params = [];
+        $params[] = ['=', 'status', 1];
+        return $courseTypeService->getTree($params, $orderBy = ['sort'=>SORT_DESC], 1, -1, ['title','id','parent_id'], true);
     }
 }
