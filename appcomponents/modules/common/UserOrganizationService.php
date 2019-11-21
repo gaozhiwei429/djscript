@@ -10,7 +10,7 @@
  * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 namespace appcomponents\modules\common;
-use appcomponents\modules\common\models\BannerModel;
+use appcomponents\modules\common\models\UserOrganizationModel;
 use source\libs\Common;
 use source\manager\BaseException;
 use source\manager\BaseService;
@@ -36,7 +36,7 @@ class UserOrganizationService extends BaseService
     public function getBannerList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*']) {
         $Common = new Common();
         $offset = $Common->getOffset($limit, $p);
-        $carModel = new BannerModel();
+        $carModel = new UserOrganizationModel();
         $cityList = $carModel->getListData($params, $orderBy, $offset, $limit, $fied);
         if(!empty($cityList)) {
             return BaseService::returnOkData($cityList);
@@ -52,7 +52,7 @@ class UserOrganizationService extends BaseService
         if(empty($params)) {
             return BaseService::returnErrData([], 55000, "请求参数异常");
         }
-        $bannerModel = new BannerModel();
+        $bannerModel = new UserOrganizationModel();
         $bannerInfo = $bannerModel->getInfoByValue($params);
         if(!empty($bannerInfo)) {
             return BaseService::returnOkData($bannerInfo);
@@ -68,7 +68,7 @@ class UserOrganizationService extends BaseService
         if(empty($dataInfo)) {
             return BaseService::returnErrData([], 56900, "请求参数异常");
         }
-        $bannerModel = new BannerModel();
+        $bannerModel = new UserOrganizationModel();
         $id = isset($dataInfo['id']) ? $dataInfo['id'] : 0;
         $editRest = 0;
         if($id) {

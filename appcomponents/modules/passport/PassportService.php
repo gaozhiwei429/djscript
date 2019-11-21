@@ -512,7 +512,7 @@ class PassportService extends BaseService
         $userData = $userModel->getInfoByParams($userModelParams);
         if(!empty($userData)) {
             $userData['nickname'] = "";
-            $userData['avatar_img'] = \Yii::$app->request->hostInfo."/logo.png";
+            $userData['avatar_img'] = "";
             $userData['sex'] = 1;
             $userData['birthdate'] = "";
             $userData['email'] = "";
@@ -521,6 +521,15 @@ class PassportService extends BaseService
             $userData['is_auth_email'] = 0;
             $userData['is_auth_qq'] = 0;
             $userData['is_auth_wchat'] = 0;
+            $userData['full_name'] = "";
+            $userData['apply_organization_date'] = "";
+            $userData['join_organization_date'] = "";
+            $userData['native_place'] = "";
+            $userData['education'] = 0;
+            $userData['organization_status'] = 0;
+            $userData['user_status'] = 0;
+            $userData['nation'] = "未知";
+            $userData['work_status'] = 0;
             $userInfoModel = new UserInfoModel();
             $userInfoParams[] = ['=', 'user_id', $id];
             $userInfoData = $userInfoModel->getInfoByParams($userInfoParams);
@@ -554,6 +563,33 @@ class PassportService extends BaseService
                 }
                 if(isset($userInfoData['is_auth_wchat']) && !empty($userInfoData['is_auth_wchat'])) {
                     $userData['is_auth_wchat'] = $userInfoData['is_auth_wchat'];
+                }
+                if(isset($userInfoData['full_name']) && !empty($userInfoData['full_name'])) {
+                    $userData['full_name'] = $userInfoData['full_name'];
+                }
+                if(isset($userInfoData['apply_organization_date']) && !empty($userInfoData['apply_organization_date'])) {
+                    $userData['apply_organization_date'] = $userInfoData['apply_organization_date'];
+                }
+                if(isset($userInfoData['join_organization_date']) && !empty($userInfoData['join_organization_date'])) {
+                    $userData['join_organization_date'] = $userInfoData['join_organization_date'];
+                }
+                if(isset($userInfoData['native_place']) && !empty($userInfoData['native_place'])) {
+                    $userData['native_place'] = $userInfoData['native_place'];
+                }
+                if(isset($userInfoData['education']) && !empty($userInfoData['education'])) {
+                    $userData['education'] = $userInfoData['education'];
+                }
+                if(isset($userInfoData['organization_status']) && !empty($userInfoData['organization_status'])) {
+                    $userData['organization_status'] = $userInfoData['organization_status'];
+                }
+                if(isset($userInfoData['user_status']) && !empty($userInfoData['user_status'])) {
+                    $userData['user_status'] = $userInfoData['user_status'];
+                }
+                if(isset($userInfoData['nation']) && !empty($userInfoData['nation'])) {
+                    $userData['nation'] = $userInfoData['nation'];
+                }
+                if(isset($userInfoData['work_status']) && !empty($userInfoData['work_status'])) {
+                    $userData['work_status'] = $userInfoData['work_status'];
                 }
                 return BaseService::returnOkData($userData);
             }
@@ -756,5 +792,66 @@ class PassportService extends BaseService
         }
         return BaseService::returnOkData([]);
 //        return BaseService::returnErrData([], 569700, "请求参数异常");
+    }
+    /**
+     * 账户信息数据获取
+     * @param $addData
+     * @return array
+     */
+    public function getList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*'], $index=true, $getUserInfo=false) {
+        $Common = new Common();
+        $offset = $Common->getOffset($limit, $p);
+        $userModel = new UserModel();
+        $userList = $userModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
+        $userInfoList = [];
+        if(isset($userList['dataList']) && !empty($userList)) {
+            if($getUserInfo) {
+                $userIds = [];
+                foreach($userList['dataList'] as $k=>$v) {
+                    if(isset($v['id'])) {
+                        $userIds[] = $v['id'];
+                    }
+                }
+                if(!empty($userIds)) {
+                    $userInfoParams[] = ['in', 'user_id', $userIds];
+                    $userInfoListRet = $this->getUserInfoList($userInfoParams, [], 1, -1, ['*'], true);
+                    if(BaseService::checkRetIsOk($userInfoListRet)) {
+                        $userInfoDataList = BaseService::getRetData($userInfoListRet);
+                        if(isset($userInfoDataList['dataList']) && !empty($userInfoDataList['dataList'])) {
+                            $userInfoList = $userInfoDataList['dataList'];
+                        }
+                    }
+                }
+                foreach($userList['dataList'] as $k=>&$v) {
+                    if(isset($v['id']) && isset($userInfoList[$v['id']])) {
+                        unset($userInfoList[$v['id']]['id']);
+                        unset($v['status']);
+                        $v = array_merge($v, $userInfoList[$v['id']]);
+                    }
+                }
+            }
+            return BaseService::returnOkData($userList);
+        }
+        return BaseService::returnErrData($userList, 500, "暂无数据");
+    }
+    /**
+     * 获取用户基本信息表数据集合
+     * @param array $params
+     * @param array $orderBy
+     * @param int $p
+     * @param int $limit
+     * @param array $fied
+     * @param bool $index
+     * @return array
+     */
+    public function getUserInfoList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*'], $index=true) {
+        $Common = new Common();
+        $offset = $Common->getOffset($limit, $p);
+        $userInfoModel = new UserInfoModel();
+        $userList = $userInfoModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
+        if(!empty($userList)) {
+            return BaseService::returnOkData($userList);
+        }
+        return BaseService::returnErrData($userList, 500, "暂无数据");
     }
 }

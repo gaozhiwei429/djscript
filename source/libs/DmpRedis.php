@@ -126,11 +126,90 @@ class DmpRedis {
         $this->redis = Yii::$app->redis;
         return $this->redis->lrange($key, $start, $end);
     }
-
-    public function __destruct() {
-        $this->redis = Yii::$app->redis;
-        if($this->redis){
-            $this->redis->close();
+    /*
+   * 添加记录
+   * @param $id id
+   * @param $data hash数据
+   * @param $hashName Hash 记录名称
+   * @param $SortName Redis SortSet 记录名称
+   * @param $redis Redis 对象
+   * @return bool
+   */
+    public function set_redis_page_info($hash_prefix,$id,$data){
+        if(!is_numeric($id) || !is_array($data)) return false;
+        $hashName = $hash_prefix.':'.$id;
+        @$this->redis->HMSET($hashName, $data);
+        @$this->redis->ZADD($hash_prefix.'_sort',$id,$id);
+        return true;
+    }
+    /*
+     * 获取分页数据
+     * @param $page 当前页数
+     * @param $pageSize 每页多少条
+     * @param $hashName Hash 记录名称
+     * @param $SortName Redis SortSet 记录名称
+     * @param $redis Redis 对象
+     * @param $key 字段数组 不传为取出全部字段
+     * @return array
+     */
+    public function get_redis_page_info($hash_prefix,$page,$pageSize,$key=array()){
+        if(!is_numeric($page) || !is_numeric($pageSize)) return false;
+        $limit_s = ($page-1) * $pageSize;
+        $limit_e = ($limit_s + $pageSize) - 1;
+        $range = $this->redis->ZRANGE($hash_prefix.'_sort',$limit_s,$limit_e); //指定区间内，带有 score 值(可选)的有序集成员的列表。
+        $count = $this->redis->ZCARD($hash_prefix.'_sort'); //统计ScoreSet总数
+        $pageCount = ceil($count/$pageSize); //总共多少页
+        $pageList = array();
+        foreach($range as $qid){
+            if(count($key) > 0){
+                $pageList[] = $this->redis->HMGET($hash_prefix.'_'.$qid,$key); //获取hash表中所有的数据
+            }else{
+                $pageList[] = $this->redis->HGETALL($hash_prefix.'_'.$qid); //获取hash表中所有的数据
+            }
         }
+        $data = array(
+            'dataList'=>$pageList, //需求数据
+            'count'=>$count, //记录总数
+            'page'=>array(
+                'page'=>$page, //当前页数
+                'pageSize'=>$pageSize, //每页多少条
+                'pageCount'=>$pageCount //总页数
+            )
+        );
+        return $data;
+    }
+    /*
+     * 删除记录
+     * @param $id id
+     * @param $hashName Hash 记录名称
+     * @param $SortName Redis SortSet 记录名称
+     * @param $redis Redis 对象
+     * @return bool
+     */
+    public function del_redis_page_info($hash_prefix,$id){
+        if(!is_array($id)) return false;
+        foreach($id as $value){
+            $hashName = $hash_prefix.'_'.$value;
+            $this->redis->del($hashName);
+            $this->redis->zRem($hash_prefix.'_sort',$value);
+        }
+        return true;
+    }
+    /*
+     * 清空数据
+     * @param string $type db:清空当前数据库 all:清空所有数据库
+     * @return bool
+     */
+    public function clear($type='db'){
+        if($type == 'db'){
+            $this->redis->flushDB();
+        }elseif($type == 'all'){
+            $this->redis->flushAll();
+        }else{
+            return false;
+        }
+        return true;
+    }
+    public function __destruct() {
     }
 }

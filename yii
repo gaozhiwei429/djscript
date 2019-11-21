@@ -15,22 +15,14 @@ ini_set('date.timezone','Asia/Shanghai');
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('LOG_FILE_PATH') or define('LOG_FILE_PATH', './runtime/web/data/logs');
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',10);
+defined('YII_ENV') or define('YII_ENV', 'dev');
 defined('DMP_IDENTITY') or define('DMP_IDENTITY', 'web');
 
-$host = gethostname();
-if ($host == '10.103.23.34') {
-	defined('YII_ENV') or define('YII_ENV', 'dev');
-} else if ($host == '10.103.22.207') {
-	defined('YII_ENV') or define('YII_ENV', 'prod');
-} else {
-	defined('YII_ENV') or define('YII_ENV', 'dev');
-}
 require(__DIR__ . '/vendor/autoload.php');
 require(__DIR__ . '/vendor/yiisoft/yii2/Yii.php');
 require(__DIR__ . '/backend/config/common/bootstrap.php');
 
 $config = require(__DIR__ . '/backend/config/'.YII_ENV.'/console.php');
-
 $application = new yii\console\Application($config);
 $exitCode = $application->run();
 exit($exitCode);
