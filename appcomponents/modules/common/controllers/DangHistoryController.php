@@ -59,7 +59,7 @@ class DangHistoryController extends UserBaseController
         $params[] = ['=', 'month', $month];
         $params[] = ['=', 'day', $day];
         $params[] = ['=', 'dang_today_id', $dang_today_id];
-        return $bannerService->getList($params, ['sort'=>SORT_DESC,'id'=>SORT_ASC], 1, -1);
+        return $bannerService->getList($params, ['sort'=>SORT_DESC,'id'=>SORT_ASC], 1, -1,['id','month','day','title','content']);
     }
 
     /**

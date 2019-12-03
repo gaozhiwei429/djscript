@@ -11,6 +11,7 @@
  */
 namespace appcomponents\modules\common;
 use appcomponents\modules\common\models\UserOrganizationModel;
+use appcomponents\modules\passport\PassportService;
 use source\libs\Common;
 use source\manager\BaseException;
 use source\manager\BaseService;
@@ -83,5 +84,50 @@ class UserOrganizationService extends BaseService
             return BaseService::returnOkData($editRest);
         }
         return BaseService::returnErrData([], 500, "操作异常");
+    }
+    /**
+     * 获取用户账户对应的基本信息数据，为了其他数据表中冗余使用
+     * @param $user_id
+     * @return array
+     */
+    public function getUserData($user_id) {
+        $passportService = new PassportService();
+        $userInfoRet = $passportService->getUserInfoByUserId($user_id);
+        if(BaseService::checkRetIsOk($userInfoRet)) {
+            $userInfo = BaseService::getRetData($userInfoRet);
+            $full_name = isset($userInfo['full_name']) ? $userInfo['full_name'] : "";
+            $avatar_img = isset($userInfo['avatar_img']) ? $userInfo['avatar_img'] : "";
+            $organization_title = "";
+            $organization_id = "";
+            if(!empty($full_name) && !empty($avatar_img)) {
+                //获取该用户所属党组织
+                $userOrgainzationService = new UserOrganizationService();
+                $userOrgainzationParams[] = ['=', 'user_id', $user_id];
+                $userOrgainzationParams[] = ['=', 'status', 1];
+                $userOrgainzationInfoRet = $userOrgainzationService->getInfo($userOrgainzationParams);
+                if(BaseService::checkRetIsOk($userOrgainzationInfoRet)) {
+                    $userOrgainzationInfo = BaseService::getRetData($userOrgainzationInfoRet);
+                    $organization_id = isset($userOrgainzationInfo['organization_id']) ? $userOrgainzationInfo['organization_id'] : 0;
+                    if($organization_id) {
+                        $organizationParams[] = ['=', 'id', $organization_id];
+                        $organizationService = new OrganizationService();
+                        $organizationInfoRet = $organizationService->getInfo($organizationParams);
+                        if(BaseService::checkRetIsOk($organizationInfoRet)) {
+                            $organizationInfo = BaseService::getRetData($organizationInfoRet);
+                            $organization_title = isset($organizationInfo['title']) ? $organizationInfo['title'] : "未知";
+                        }
+                    }
+                }
+                $data['user_id'] = $user_id;
+                $data['organization_title'] = $organization_title;
+                $data['organization_id'] = $organization_id;
+                $data['full_name'] = $full_name;
+                $data['avatar_img'] = $avatar_img;
+                return BaseService::returnOkData($data);
+            } else {
+                return BaseService::returnErrData([], 513400, "为了维护党建网络环境，请您实名认证");
+            }
+        }
+        return $userInfoRet;
     }
 }

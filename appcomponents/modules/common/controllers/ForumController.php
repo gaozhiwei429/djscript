@@ -12,6 +12,7 @@
 namespace appcomponents\modules\common\controllers;
 use appcomponents\modules\common\ForumService;
 use appcomponents\modules\common\ForumShowService;
+use appcomponents\modules\common\UserOrganizationService;
 use appcomponents\modules\passport\PassportService;
 use source\controllers\UserBaseController;
 use source\manager\BaseService;
@@ -108,5 +109,79 @@ class ForumController extends UserBaseController
         $params[] = ['>=', 'create_time', date("Y-m-d 00:00:00")];
         $params[] = ['<=', 'create_time', date("Y-m-d 23:59:59")];
         return $forumShowService->getList($params, ['id'=>SORT_ASC], $page, $size,['*']);
+    }
+    /**
+     * 发表话题
+     * @return array
+     */
+    public function actionSubmit() {
+        if(!isset($this->user_id) || !$this->user_id) {
+            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
+        }
+        $type = intval(Yii::$app->request->post('type', 1));
+        $is_anonymous = intval(Yii::$app->request->post('is_anonymous', 0));
+        $title = trim(Yii::$app->request->post('title', ""));
+        $content = trim(Yii::$app->request->post('content', ""));
+        $pic_url = Yii::$app->request->post('pic_url', []);
+        $longitude_and_latitude = trim(Yii::$app->request->post('longitude_and_latitude', null));
+        $address = trim(Yii::$app->request->post('address', null));
+        $forumService = new ForumService();
+        $data = [];
+        if(empty($title)) {
+            return BaseService::returnErrData([], 512600, "标题不能为空");
+        }
+        if(empty($content)) {
+            return BaseService::returnErrData([], 512600, "内容不能为空");
+        }
+        $userOrganizationService = new UserOrganizationService();
+        $userOrganizationDataRet = $userOrganizationService->getUserData($this->user_id);
+        if(BaseService::checkRetIsOk($userOrganizationDataRet)) {
+            $userOrganizationData = BaseService::getRetData($userOrganizationDataRet);
+        }
+        $data['title'] = $title;
+        $data['is_anonymous'] = $is_anonymous;
+        $data['type'] = $type;
+        $data['content'] = $content;
+        if(!empty($pic_url) && is_array($pic_url)) {
+            $data['pic_url'] = json_encode($pic_url);
+        } else {
+            $data['pic_url'] = json_encode([]);
+        }
+        if(!empty($longitude_and_latitude)) {
+            $data['longitude_and_latitude'] = $longitude_and_latitude;
+        } else {
+            $data['longitude_and_latitude'] = "";
+        }
+        if(!empty($address)) {
+            $data['address'] = $address;
+        } else {
+            $data['address'] = "";
+        }
+        if(isset($userOrganizationData['full_name'])) {
+            $data['full_name'] = $userOrganizationData['full_name'];
+        } else {
+            $data['full_name'] = "";
+        }
+        if(isset($userOrganizationData['avatar_img'])) {
+            $data['avatar_img'] = $userOrganizationData['avatar_img'];
+        } else {
+            $data['avatar_img'] = "";
+        }
+        if(isset($userOrganizationData['user_id'])) {
+            $data['user_id'] = $userOrganizationData['user_id'];
+        } else {
+            $data['user_id'] = 0;
+        }
+        if(isset($userOrganizationData['organization_title'])) {
+            $data['organization_title'] = $userOrganizationData['organization_title'];
+        } else {
+            $data['organization_title'] = "";
+        }
+        if(isset($userOrganizationData['organization_id'])) {
+            $data['organization_id'] = $userOrganizationData['organization_id'];
+        } else {
+            $data['organization_id'] = "";
+        }
+        return $forumService->editInfo($data);
     }
 }
