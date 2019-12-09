@@ -1,7 +1,7 @@
 <?php
 /**
- * 运营平台课程管理表
- * @文件名称: CourseModel.php
+ * 运营平台章节课件管理表
+ * @文件名称: LessionModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,12 +14,12 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class CourseModel extends BaseModel
+class LessionModel extends BaseModel
 {
     const ON_LINE_STATUS = 1;//已上线
     const BEFORT_STATUS = 0;//已下线
     public static function tableName() {
-        return '{{%course}}';
+        return '{{%lession}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -39,7 +39,7 @@ class CourseModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=false) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -58,17 +58,6 @@ class CourseModel extends BaseModel
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
-        $projectListArr = [];
-        if($index) {
-            foreach($projectList as $projectInfo) {
-                if(isset($projectInfo['id']) && $projectInfo['id']) {
-                    $projectListArr[$projectInfo['id']] = $projectInfo;
-                }
-            }
-            if(!empty($projectListArr)) {
-                return $projectListArr;
-            }
-        }
         return $projectList;
     }
     /**
@@ -80,8 +69,8 @@ class CourseModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
-        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
+        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
     }
     /**
      * 获取分页数据列表
@@ -92,9 +81,9 @@ class CourseModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,
@@ -143,16 +132,11 @@ class CourseModel extends BaseModel
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//名称
-            $thisModel->course_type_id = isset($addData['course_type_id']) ? intval($addData['course_type_id']) : 0;
-            $thisModel->content = isset($addData['content']) ? trim($addData['content']) : ""; //文章内容
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
-            $thisModel->elective_type = isset($addData['elective_type']) ? intval($addData['elective_type']) : 1;
-            $thisModel->pic_url = isset($addData['pic_url']) ? trim($addData['pic_url']) : ""; //文章图片
+            $thisModel->file = isset($addData['file']) ? trim($addData['file']) : "";
+            $thisModel->size = isset($addData['size']) ? floatval($addData['size']) : 0;
+            $thisModel->format = isset($addData['format']) ? trim($addData['format']) : "";
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->sections_ids = (isset($addData['sections_ids']) && !empty($addData['sections_ids']))
-                ? $addData['sections_ids'] : "";//章节id集合
-            $thisModel->sections_count = isset($addData['sections_count']) ? intval($addData['sections_count']) : 0;
-            $thisModel->lessions_count = isset($addData['lessions_count']) ? intval($addData['lessions_count']) : 0;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

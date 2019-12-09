@@ -1,7 +1,7 @@
 <?php
 /**
- * 课程相关的数据获取service
- * @文件名称: CourseService.php
+ * 课程章节相关的数据获取service
+ * @文件名称: SectionsService.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Mobile: 15910987706
@@ -10,12 +10,12 @@
  * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 namespace appcomponents\modules\common;
-use appcomponents\modules\common\models\CourseModel;
+use appcomponents\modules\common\models\SectionsModel;
 use source\libs\Common;
 use source\manager\BaseException;
 use source\manager\BaseService;
 use Yii;
-class CourseService extends BaseService
+class SectionsService extends BaseService
 {
     /**
      * @inheritdoc
@@ -36,7 +36,7 @@ class CourseService extends BaseService
     public function getList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*'], $index=false) {
         $Common = new Common();
         $offset = $Common->getOffset($limit, $p);
-        $newsModel = new CourseModel();
+        $newsModel = new SectionsModel();
         $cityList = $newsModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
         if(!empty($cityList)) {
             return BaseService::returnOkData($cityList);
@@ -52,9 +52,12 @@ class CourseService extends BaseService
         if(empty($params)) {
             return BaseService::returnErrData([], 55000, "请求参数异常");
         }
-        $newsModel = new CourseModel();
+        $newsModel = new SectionsModel();
         $newsInfo = $newsModel->getInfoByValue($params);
         if(!empty($newsInfo)) {
+            if(isset($newsInfo['pic_url'])) {
+                $newsInfo['pic_url'] = json_decode($newsInfo['pic_url'], true);
+        }
             return BaseService::returnOkData($newsInfo);
         }
         return BaseService::returnErrData([], 500, "暂无数据");
@@ -68,7 +71,7 @@ class CourseService extends BaseService
         if(empty($dataInfo)) {
             return BaseService::returnErrData([], 56900, "请求参数异常");
         }
-        $newsModel = new CourseModel();
+        $newsModel = new SectionsModel();
         $id = isset($dataInfo['id']) ? $dataInfo['id'] : 0;
         $editRest = 0;
         if($id) {

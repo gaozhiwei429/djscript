@@ -12,6 +12,8 @@
 namespace appcomponents\modules\common\controllers;
 use appcomponents\modules\common\CourseService;
 use appcomponents\modules\common\CourseTypeService;
+use appcomponents\modules\common\LessionService;
+use appcomponents\modules\common\SectionsService;
 use source\controllers\BaseController;
 use source\manager\BaseService;
 use Yii;
@@ -33,7 +35,7 @@ class CourseController extends BaseController
         if($course_type_id) {
             $params[] = ['=', 'course_type_id', $course_type_id];
         }
-        $courseListRet = $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['uuid','title','course_type_id','content','pic_url']);
+        $courseListRet = $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count']);
         if(BaseService::checkRetIsOk($courseListRet)) {
             $courseList = BaseService::getRetData($courseListRet);
             if(!empty($courseList['dataList'])) {
@@ -60,6 +62,9 @@ class CourseController extends BaseController
      * @return array
      */
     public function actionGetInfo() {
+        if (!isset($this->user_id) || !$this->user_id) {
+            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
+        }
         $uuid = trim(Yii::$app->request->post('uuid', null));
         if(empty($uuid)) {
             return BaseService::returnErrData([], 54000, "请求参数异常");
@@ -67,7 +72,37 @@ class CourseController extends BaseController
         $newsService = new CourseService();
         $params = [];
         $params[] = ['=', 'uuid', $uuid];
-        return $newsService->getInfo($params);
+        $courseInfoRet = $newsService->getInfo($params);
+        if(BaseService::checkRetIsOk($courseInfoRet)) {
+            $courseInfo = BaseService::getRetData($courseInfoRet);
+            if(isset($courseInfo['sections_ids']) && !empty($courseInfo['sections_ids'])) {
+                $sections_ids = explode(',',$courseInfo['sections_ids']);
+                $sectionService = new SectionsService();
+                $sectionParams[] = ['in', 'id', $sections_ids];
+                $sectionParams[] = ['!=', 'status', 0];
+                $sectionListRet = $sectionService->getList($sectionParams, ['sort'=>SORT_DESC, 'id'=>SORT_ASC], 1, -1, ['id', 'title', 'lession_ids'], true);
+                $sectionDataList = BaseService::getRetData($sectionListRet);
+                if(isset($sectionDataList['dataList']) && !empty($sectionDataList['dataList'])) {
+                    foreach($sectionDataList['dataList'] as &$sectionData) {
+                        $courseInfo['sectionData'][$sectionData['id']]['sectionInfo'] = $sectionData;
+                        if(isset($sectionData['lession_ids']) && !empty($sectionData['lession_ids'])) {
+                            $lessionParams = [];
+                            $lessionParams[] = ['in', 'id', explode(',',$sectionData['lession_ids'])];
+                            $lessionParams[] = ['!=', 'status', 0];
+                            $lessionService = new LessionService();
+                            $lessionListRet = $lessionService->getList($lessionParams, ['sort'=>SORT_ASC, 'id'=>SORT_ASC], 1, -1, ['id', 'title', 'uuid', 'file', 'format']);
+                            $lessionDataList = BaseService::getRetData($lessionListRet);
+                            if(isset($lessionDataList['dataList']) && !empty($lessionDataList['dataList'])) {
+                                $courseInfo['sectionData'][$sectionData['id']]['lessionList'] = $lessionDataList['dataList'];
+                            }
+                        }
+
+                    }
+                }
+            }
+            return BaseService::returnOkData($courseInfo);
+        }
+        return $courseInfoRet;
     }
 
     /**

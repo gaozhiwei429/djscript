@@ -97,8 +97,8 @@ class CourseTypeService extends BaseService
     public function getTree($params = [], $orderBy = [], $p = 1, $limit = -1, $fied=['*'], $index=false) {
         $Common = new Common();
         $offset = $Common->getOffset($limit, $p);
-        $typeModel = new CourseTypeModel();
-        $typeList = $typeModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
+        $newsModel = new CourseTypeModel();
+        $typeList = $newsModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
         if(!empty($typeList)) {
             if(!$index) {
                 return BaseService::returnOkData($typeList);
