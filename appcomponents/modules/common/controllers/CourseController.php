@@ -26,6 +26,19 @@ class CourseController extends BaseController
      * 首页资讯获取
      * @return array
      */
+    public function actionGetBannerList() {
+        $page = intval(Yii::$app->request->post('p', 1));
+        $size = intval(Yii::$app->request->post('size', 5));
+        $newsService = new CourseService();
+        $params[] = ['>=','start_time', date('Y-m-d')];
+        $params[] = ['<=','end_time', date('Y-m-d')];
+        return $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['uuid','title','pic_url','elective_type','sections_count','lessions_count']);
+    }
+
+    /**
+     * 首页资讯获取
+     * @return array
+     */
     public function actionGetList() {
         $page = intval(Yii::$app->request->post('p', 1));
         $size = intval(Yii::$app->request->post('size', 10));
@@ -35,7 +48,7 @@ class CourseController extends BaseController
         if($course_type_id) {
             $params[] = ['=', 'course_type_id', $course_type_id];
         }
-        $courseListRet = $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count']);
+        $courseListRet = $newsService->getList($params, ['id'=>SORT_DESC], $page, $size,['uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count']);
         if(BaseService::checkRetIsOk($courseListRet)) {
             $courseList = BaseService::getRetData($courseListRet);
             if(!empty($courseList['dataList'])) {
@@ -56,15 +69,11 @@ class CourseController extends BaseController
         }
         return $courseListRet;
     }
-
     /**
      * 文章详情数据获取
      * @return array
      */
     public function actionGetInfo() {
-        if (!isset($this->user_id) || !$this->user_id) {
-            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
-        }
         $uuid = trim(Yii::$app->request->post('uuid', null));
         if(empty($uuid)) {
             return BaseService::returnErrData([], 54000, "请求参数异常");
