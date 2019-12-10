@@ -63,7 +63,7 @@ class UserInfoModel extends BaseModel {
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=true) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -81,8 +81,17 @@ class UserInfoModel extends BaseModel {
         if (!empty($orderBy)) {
             $query -> orderBy($orderBy);
         }
-        $projectList = $query->asArray()->all();
-        return $projectList;
+        $dataList = $query->asArray()->all();
+        if($index) {
+            $dataArr = [];
+            foreach($dataList as $k=>$v) {
+                if(isset($v['user_id'])) {
+                    $dataArr[$v['user_id']] = $v;
+                }
+            }
+            $dataList = $dataArr;
+        }
+        return $dataList;
     }
     /**
      * 获取分页数据列表
@@ -93,9 +102,9 @@ class UserInfoModel extends BaseModel {
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=true) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,

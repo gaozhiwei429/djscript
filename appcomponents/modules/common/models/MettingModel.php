@@ -1,7 +1,7 @@
 <?php
 /**
- * 职务管理
- * @文件名称: LevelModel.php
+ * 三会一课管理表
+ * @文件名称: MettingModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,12 +14,13 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class LevelModel extends BaseModel
+class MettingModel extends BaseModel
 {
-    const ON_LINE_STATUS = 1;//已上线
-    const BEFORT_STATUS = 0;//已下线
+    const WAIT_APPROVAL_STATUS = 1;//待审批
+    const ALREADY_APPROVAL_STATUS = 2;//已审批
+    const BEFORT_STATUS = 0;//禁用
     public static function tableName() {
-        return '{{%level}}';
+        return '{{%metting}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -27,8 +28,8 @@ class LevelModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByValue($params){
-        return $this->getOne($params);
+    public function getInfoByValue($params,$field=['*']){
+        return $this->getOne($params,$field);
     }
     /**
      * 获取数据集
@@ -39,7 +40,7 @@ class LevelModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=false) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -58,19 +59,10 @@ class LevelModel extends BaseModel
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
-        if($index) {
-            $dataArr = [];
-            foreach($projectList as $k=>$v) {
-                if(isset($v['id'])) {
-                    $dataArr[$v['id']] = $v;
-                }
-            }
-            $projectList = $dataArr;
-        }
         return $projectList;
     }
     /**
-     * 获取banner首页数据展示
+     * 获取数据展示
      * @param array $params
      * @param array $orderBy
      * @param int $offset
@@ -90,9 +82,9 @@ class LevelModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,
@@ -104,7 +96,6 @@ class LevelModel extends BaseModel
             return $data;
 //            $query->createCommand()->getRawSql();
         } catch (BaseException $e) {
-            DmpLog::warning('getListData_level_model_error', $e);
             return [];
         }
     }
@@ -128,7 +119,6 @@ class LevelModel extends BaseModel
 //                return $query->createCommand()->getRawSql();
             return  $query->count();
         } catch (BaseException $e) {
-            DmpLog::warning('getCount_level_model_error', $e);
             return 0;
         }
     }
@@ -142,17 +132,25 @@ class LevelModel extends BaseModel
         try {
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
-            $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";
-            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
-			$thisModel->save();
+            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
+            $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//名称
+            $thisModel->content = isset($addData['content']) ? trim($addData['content']) : "";//名称
+            $thisModel->address = isset($addData['address']) ? trim($addData['address']) : "";//会议地址
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ALREADY_APPROVAL_STATUS;
+            $thisModel->join_people_num = isset($addData['join_people_num']) ? intval($addData['join_people_num']) : 0;//参会人数
+            $thisModel->leave_people_num = isset($addData['leave_people_num']) ? intval($addData['leave_people_num']) : 0;//请假人数
+            $thisModel->president_userid = isset($addData['president_userid']) ? intval($addData['president_userid']) : 0;//'主持人
+            $thisModel->speaker_userid = isset($addData['speaker_userid']) ? intval($addData['speaker_userid']) : 0;//主讲人
+            $thisModel->metting_type_id = isset($addData['metting_type_id']) ? intval($addData['metting_type_id']) : 0;//会议类型id
+            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;//发布者用户id
+            $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
+            $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
         } catch (BaseException $e) {
-            DmpLog::error('insert_level_model_error', $e);
             return false;
         }
     }
-
     /**
      * 更新信息数据
      * @param int $id ID
@@ -170,7 +168,6 @@ class LevelModel extends BaseModel
             }
             return false;
         } catch (BaseException $e) {
-            DmpLog::error('update_level_model_error', $e);
             return false;
         }
     }

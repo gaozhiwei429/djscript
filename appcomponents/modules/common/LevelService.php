@@ -33,11 +33,11 @@ class LevelService extends BaseService
      * @param $addData
      * @return array
      */
-    public function getList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*']) {
+    public function getList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*'], $index=false) {
         $Common = new Common();
         $offset = $Common->getOffset($limit, $p);
         $carModel = new LevelModel();
-        $cityList = $carModel->getListData($params, $orderBy, $offset, $limit, $fied);
+        $cityList = $carModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
         if(!empty($cityList)) {
             return BaseService::returnOkData($cityList);
         }
@@ -53,7 +53,7 @@ class LevelService extends BaseService
             return BaseService::returnErrData([], 55000, "请求参数异常");
         }
         $carModel = new LevelModel();
-        $bannerInfo = $bannerModel->getInfoByValue($params);
+        $bannerInfo = $carModel->getInfoByValue($params);
         if(!empty($bannerInfo)) {
             return BaseService::returnOkData($bannerInfo);
         }

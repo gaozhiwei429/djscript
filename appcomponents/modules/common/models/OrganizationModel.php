@@ -39,7 +39,7 @@ class OrganizationModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=true) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -58,6 +58,15 @@ class OrganizationModel extends BaseModel
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
+        if($index) {
+            $dataArr = [];
+            foreach($projectList as $k=>$v) {
+                if(isset($v['uuid'])) {
+                    $dataArr[$v['uuid']] = $v;
+                }
+            }
+            $projectList = $dataArr;
+        }
         return $projectList;
     }
     /**
@@ -69,8 +78,8 @@ class OrganizationModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
-        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
+    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=true) {
+        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
     }
     /**
      * 获取分页数据列表
@@ -83,13 +92,7 @@ class OrganizationModel extends BaseModel
      */
     public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
-            if($index) {
-                foreach($dataList as $k=>$v) {
-                    $dataList[$v['uuid']] = $v;
-                    unset($dataList[$k]);
-                }
-            }
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,
@@ -103,6 +106,71 @@ class OrganizationModel extends BaseModel
         } catch (BaseException $e) {
             return [];
         }
+    }
+    /**
+     * 获取分页数据列表
+     * @param array $params
+     * @param array $orderBy
+     * @param int $offset
+     * @param int $limit
+     * @param array $fied
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getListDataById($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+        try {
+            $dataList = self::getDatasById($params, $orderBy, $offset, $limit, $fied, $index);
+            $data = [
+                'dataList' => $dataList,
+                'count' => 0,
+            ];
+            if(!empty($dataList)) {
+                $count = self::getCount($params);
+                $data['count'] = $count;
+            }
+            return $data;
+//            $query->createCommand()->getRawSql();
+        } catch (BaseException $e) {
+            return [];
+        }
+    }
+    /**
+     * 获取数据集
+     * @param array $params
+     * @param array $orderBy
+     * @param int $offset
+     * @param int $limit
+     * @param array $fied
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getDatasById($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=true) {
+        $query = self::find()->select($fied);
+        if(!empty($params)) {
+            foreach($params as $k=>$v) {
+                if(is_array($v)) {
+                    $query -> andWhere($v);
+                } else {
+                    $query -> andWhere([$k=>$v]);
+                }
+            }
+        }
+        if ($limit !== -1) {
+            $query -> offset($offset);
+            $query -> limit($limit);
+        }
+        if (!empty($orderBy)) {
+            $query -> orderBy($orderBy);
+        }
+        $projectList = $query->asArray()->all();
+        if($index) {
+            $dataArr = [];
+            foreach($projectList as $k=>$v) {
+                if(isset($v['id'])) {
+                    $dataArr[$v['id']] = $v;
+                }
+            }
+            $projectList = $dataArr;
+        }
+        return $projectList;
     }
     /**
      * 获取总数量

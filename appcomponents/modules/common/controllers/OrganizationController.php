@@ -66,18 +66,14 @@ class OrganizationController extends  UserBaseController
      * 详情数据状态编辑
      * @return array
      */
-    public function actionSetStatus() {
+    public function actionGetTree() {
         if (!isset($this->user_id) || !$this->user_id) {
             return BaseService::returnErrData([], 5001, "当前账号登陆异常");
-        }
-        $uuid = trim(Yii::$app->request->post('uuid', 0));
-        $status = intval(Yii::$app->request->post('status',  0));
-        $bannerService = new BannerService();
-        if(empty($uuid)) {
-            return BaseService::returnErrData([], 58000, "请求参数异常，请填写完整");
-        }
-        $dataInfo['uuid'] = $uuid;
-        $dataInfo['status'] = $status;
-        return $bannerService->editInfo($dataInfo);
+        }$organizationService = new OrganizationService();
+        $params = [];
+        $params[] = ['!=', 'status', 0];
+        return $organizationService->getTree($params, ['id'=>SORT_ASC], 1, -1,
+            $fied=['uuid','title','parent_uuid','organization_type','branch_type','contacts'],
+            true);
     }
 }

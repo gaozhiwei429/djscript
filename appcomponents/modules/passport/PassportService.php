@@ -530,6 +530,9 @@ class PassportService extends BaseService
             $userData['user_status'] = 0;
             $userData['nation'] = "未知";
             $userData['work_status'] = 0;
+            $userData['create_time_day'] = 0;
+            $userData['create_time_year'] = 0;
+            $userData['create_time_month'] = 0;
             $userInfoModel = new UserInfoModel();
             $userInfoParams[] = ['=', 'user_id', $id];
             $userInfoData = $userInfoModel->getInfoByParams($userInfoParams);
@@ -590,6 +593,15 @@ class PassportService extends BaseService
                 }
                 if(isset($userInfoData['work_status']) && !empty($userInfoData['work_status'])) {
                     $userData['work_status'] = $userInfoData['work_status'];
+                }
+                if(isset($userInfoData['create_time_year']) && !empty($userInfoData['create_time_year'])) {
+                    $userData['create_time_year'] = $userInfoData['create_time_year'];
+                }
+                if(isset($userInfoData['create_time_month']) && !empty($userInfoData['create_time_month'])) {
+                    $userData['create_time_month'] = $userInfoData['create_time_month'];
+                }
+                if(isset($userInfoData['create_time_day']) && !empty($userInfoData['create_time_day'])) {
+                    $userData['create_time_day'] = $userInfoData['create_time_day'];
                 }
                 return BaseService::returnOkData($userData);
             }

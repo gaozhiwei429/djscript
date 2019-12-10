@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * 文件上传接口
+ * @文件名称: UploadController.php
+ * @author: jawei
+ * @Email: gaozhiwei429@sina.com
+ * @Mobile: 15910987706
+ * @Date: 2018-12-01
+ * @Copyright: 2017 北京往全保科技有限公司. All rights reserved.
+ * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
+ */
 namespace appcomponents\modules\common\controllers;
 use appcomponents\modules\common\CommonService;
 use source\controllers\UserBaseController;
@@ -7,16 +16,15 @@ use source\libs\Common;
 use source\libs\DmpLog;
 use source\manager\BaseService;
 use Yii;
-/**
- * 文件上传接口
- */
 class UploadController extends UserBaseController
 {
+    /**
+     * 用户登录态基础类验证
+     * @return array
+     */
     public function beforeAction($action){
-        $userToken = parent::userToken();
-        if (!BaseService::checkRetIsOk($userToken)) {
-            return $userToken;
-        }
+        $this->noLogin = false;
+        $userToken = $this->userToken();
         return parent::beforeAction($action);
     }
     /**
@@ -48,13 +56,10 @@ class UploadController extends UserBaseController
      * @return array
      */
     public function actionAliFile() {
-        DmpLog::debug($_FILES);
         if(!isset($this->user_id) || !$this->user_id) {
             return BaseService::returnErrData([], 5001, "当前账号登陆异常");
         }
-//        if (Yii::$app->request->isPost) {
         $commonService = new CommonService();
-//            $ret = $commonService->uploadImg($user_id, $_FILES);
         $local_path = "";
         $key = "";
         if(isset($_FILES['files']['name']) && !empty($_FILES['files']['name'])) {

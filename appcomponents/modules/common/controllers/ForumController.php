@@ -43,7 +43,7 @@ class ForumController extends UserBaseController
         $tag = intval(Yii::$app->request->post('tag', 0));//1推荐、2最新、3动态
         $newsService = new ForumService();
         $params = [];
-        $params[] = ['!=', 'status', 0];
+//        $params[] = ['!=', 'status', 0];
 		if(!empty($type)) {
 			$params[] = ['=', 'type', $type];
 		}
@@ -72,7 +72,6 @@ class ForumController extends UserBaseController
             }
         }
         $orderBy = [];
-        $params[] = ['=', 'status', 2];
         if($is_hot) {
             $params[] = ['=', 'is_hot', $is_hot];
         }
@@ -87,7 +86,7 @@ class ForumController extends UserBaseController
             }
         }
         $orderBy['sort']=SORT_DESC;
-        $orderBy['id']=SORT_ASC;
+        $orderBy['id']=SORT_DESC;
 //        var_dump($orderBy);die;
         return $newsService->getList($params,$orderBy , $page, $size,['*']);
     }
