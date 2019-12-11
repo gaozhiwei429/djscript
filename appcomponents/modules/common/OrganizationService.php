@@ -110,7 +110,7 @@ class OrganizationService extends BaseService
      * @param bool $index
      * @return array
      */
-    public function getTree($params = [], $orderBy = [], $p = 1, $limit = -1, $fied=['*'], $index=false) {
+    public function getTree($params = [], $orderBy = [], $p = 1, $limit = -1, $fied=['*'], $index=false,$parent_uuid="") {
         $Common = new Common();
         $offset = $Common->getOffset($limit, $p);
         $organizationModel = new OrganizationModel();
@@ -122,7 +122,14 @@ class OrganizationService extends BaseService
             }
             if(isset($typeList['dataList']) && !empty($typeList['dataList'])) {
                 $dataList = Common::generateTree($typeList['dataList'],'uuid', 'parent_uuid');
-                return BaseService::returnOkData($dataList);
+                $dataArrTree = $dataTree = [];
+                if($parent_uuid) {
+                    $Common->getSonDataTree($dataList, $parent_uuid, $dataArrTree);
+                    $Common->reform_keys($dataArrTree,$dataTree);
+                } else {
+                    $Common->reform_keys($dataList,$dataTree);
+                }
+                return BaseService::returnOkData($dataTree);
             }
             return BaseService::returnOkData($typeList);
         }

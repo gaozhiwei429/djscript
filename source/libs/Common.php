@@ -312,7 +312,42 @@ class Common
         }
         return $tree;
     }
-
+    /**
+     * 实现无限极分类,$items数据结构都一id值为索引
+     * @param $items
+     * @return array
+     */
+    public function getSonDataTree($items, $parentkey='',&$dataArr=[]){
+        if(!is_array($items)){
+            return $items;
+        }
+        $itemData = array_values($items);
+        foreach($itemData as $item){
+            if(isset($item['uuid']) && $item['uuid']==$parentkey) {
+                $dataArr[] = $item;//$this->getSonDataTree($v['son'], $dataArr[$k]['son']);
+            } else {
+                $this->getSonDataTree($item, $parentkey, $dataArr);
+            }
+        }
+        return $dataArr;
+    }
+    /**
+     * 重置多维数组的key
+     * @param $array
+     * @return array
+     */
+    public function reform_keys($array,&$dataArr=[]){
+        if(!is_array($array)){
+            return $array;
+        }
+        $dataArr = array_values($array);
+        foreach($dataArr as $k=>$v){
+            if(isset($v['son'])) {
+                $dataArr[$k]['son'] = $this->reform_keys($v['son'], $dataArr[$k]['son']);
+            }
+        }
+        return $dataArr;
+    }
     /**
      * 隐藏字符串的数据
      * @param $string

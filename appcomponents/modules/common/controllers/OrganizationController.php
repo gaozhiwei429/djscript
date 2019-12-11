@@ -69,11 +69,13 @@ class OrganizationController extends  UserBaseController
     public function actionGetTree() {
         if (!isset($this->user_id) || !$this->user_id) {
             return BaseService::returnErrData([], 5001, "当前账号登陆异常");
-        }$organizationService = new OrganizationService();
+        }
+        $parent_uuid = trim(Yii::$app->request->post('parent_uuid', ""));
+        $organizationService = new OrganizationService();
         $params = [];
         $params[] = ['!=', 'status', 0];
         return $organizationService->getTree($params, ['id'=>SORT_ASC], 1, -1,
             $fied=['uuid','title','parent_uuid','organization_type','branch_type','contacts'],
-            true);
+            true,$parent_uuid);
     }
 }
