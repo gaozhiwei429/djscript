@@ -1,7 +1,7 @@
 <?php
 /**
- * 三会一课管理表
- * @文件名称: MettingModel.php
+ * 用户参加三会一课管理表
+ * @文件名称: UserMettingModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,13 +14,17 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class MettingModel extends BaseModel
+class UserMettingModel extends BaseModel
 {
-    const WAIT_APPROVAL_STATUS = 1;//待审批
-    const ALREADY_APPROVAL_STATUS = 2;//已审批
-    const BEFORT_STATUS = 0;//禁用
+	//0删除，1参加，2缺席，3请假，4迟到，5待参加
+    const WAIT_JOIN_STATUS = 5;
+    const JOIN_STATUS = 1;
+    const ABSENT_STATUS = 2;
+    const LEAVE_STATUS = 3;
+    const LATE_STATUS = 4;
+    const DELECT_STATUS = 0;//删除
     public static function tableName() {
-        return '{{%metting}}';
+        return '{{%user_metting}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -133,22 +137,11 @@ class MettingModel extends BaseModel
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
-            $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//名称
-            $thisModel->content = isset($addData['content']) ? trim($addData['content']) : "";//名称
-            $thisModel->address = isset($addData['address']) ? trim($addData['address']) : "";//会议地址
-            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ALREADY_APPROVAL_STATUS;
-            $thisModel->join_people_num = isset($addData['join_people_num']) ? intval($addData['join_people_num']) : 0;//参会人数
-            $thisModel->leave_people_num = isset($addData['leave_people_num']) ? intval($addData['leave_people_num']) : 0;//请假人数
-            $thisModel->late_people_num = isset($addData['late_people_num']) ? intval($addData['late_people_num']) : 0;//迟到人数
-            $thisModel->president_userid = isset($addData['president_userid']) ? trim($addData['president_userid']) : "";//'主持人
-            $thisModel->speaker_userid = isset($addData['speaker_userid']) ? trim($addData['speaker_userid']) : "";//主讲人
-            $thisModel->metting_type_id = isset($addData['metting_type_id']) ? intval($addData['metting_type_id']) : 0;//会议类型id
-            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;//发布者用户id
-            $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->join_peoples = isset($addData['join_peoples']) ? trim($addData['join_peoples']) : "";
-            $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
+            $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;//名称
+            $thisModel->metting_id = isset($addData['metting_id']) ? intval($addData['metting_id']) : 0;//名称
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::WAIT_JOIN_STATUS;
+            $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";//冗余会议开始时间
+            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";//冗余会议截止时间
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

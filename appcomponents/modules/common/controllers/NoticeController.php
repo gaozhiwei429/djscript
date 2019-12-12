@@ -45,20 +45,26 @@ class NoticeController extends BaseController
         $noticeService = new NoticeService();
         $params = [];
         $params[] = ['!=', 'status', 0];
-        return $noticeService->getList($params, ['id'=>SORT_DESC, 'sort'=>SORT_DESC], $page, $size,['id','title']);
+        return $noticeService->getList($params, ['id'=>SORT_DESC, 'sort'=>SORT_DESC], $page, $size,['uuid','id','title']);
     }
     /**
      * 公告详情数据获取
      * @return array
      */
     public function actionGetInfo() {
-        $uuid = trim(Yii::$app->request->post('uuid', 0));
-        if(empty($uuid)) {
+        $uuid = trim(Yii::$app->request->post('uuid', ""));
+        $id = intval(Yii::$app->request->post('id', 0));
+        if(empty($uuid) && empty($id)) {
             return BaseService::returnErrData([], 54000, "请求参数异常");
         }
         $noticeService = new NoticeService();
         $params = [];
-        $params[] = ['=', 'uuid', $uuid];
+        if($uuid) {
+            $params[] = ['=', 'uuid', $uuid];
+        }
+        if($id) {
+            $params[] = ['=', 'id', $id];
+        }
         $params[] = ['!=', 'status', 0];
         return $noticeService->getInfo($params,['pic_url','uuid','content','title','type_id','create_time']);
     }

@@ -1,7 +1,7 @@
 <?php
 /**
- * 三会一课管理表
- * @文件名称: MettingModel.php
+ * 三会一课分类管理表
+ * @文件名称: MettingTypeModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,13 +14,12 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class MettingModel extends BaseModel
+class MettingTypeModel extends BaseModel
 {
-    const WAIT_APPROVAL_STATUS = 1;//待审批
-    const ALREADY_APPROVAL_STATUS = 2;//已审批
-    const BEFORT_STATUS = 0;//禁用
+    const ON_LINE_STATUS = 1;//上线
+    const FAIL_LINE_STATUS = 0;//下线
     public static function tableName() {
-        return '{{%metting}}';
+        return '{{%metting_type}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -40,7 +39,7 @@ class MettingModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=false) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -58,8 +57,17 @@ class MettingModel extends BaseModel
         if (!empty($orderBy)) {
             $query -> orderBy($orderBy);
         }
-        $projectList = $query->asArray()->all();
-        return $projectList;
+        $dataList = $query->asArray()->all();
+        if($index) {
+            $dataArr = [];
+            foreach($dataList as $k=>$v) {
+                if(isset($v['id'])) {
+                    $dataArr[$v['id']] = $v;
+                }
+            }
+            $dataList = $dataArr;
+        }
+        return $dataList;
     }
     /**
      * 获取数据展示
@@ -82,9 +90,9 @@ class MettingModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,
@@ -132,23 +140,9 @@ class MettingModel extends BaseModel
         try {
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
-            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
             $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//名称
-            $thisModel->content = isset($addData['content']) ? trim($addData['content']) : "";//名称
-            $thisModel->address = isset($addData['address']) ? trim($addData['address']) : "";//会议地址
-            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ALREADY_APPROVAL_STATUS;
-            $thisModel->join_people_num = isset($addData['join_people_num']) ? intval($addData['join_people_num']) : 0;//参会人数
-            $thisModel->leave_people_num = isset($addData['leave_people_num']) ? intval($addData['leave_people_num']) : 0;//请假人数
-            $thisModel->late_people_num = isset($addData['late_people_num']) ? intval($addData['late_people_num']) : 0;//迟到人数
-            $thisModel->president_userid = isset($addData['president_userid']) ? trim($addData['president_userid']) : "";//'主持人
-            $thisModel->speaker_userid = isset($addData['speaker_userid']) ? trim($addData['speaker_userid']) : "";//主讲人
-            $thisModel->metting_type_id = isset($addData['metting_type_id']) ? intval($addData['metting_type_id']) : 0;//会议类型id
-            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;//发布者用户id
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->join_peoples = isset($addData['join_peoples']) ? trim($addData['join_peoples']) : "";
-            $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

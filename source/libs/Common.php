@@ -324,7 +324,7 @@ class Common
         $itemData = array_values($items);
         foreach($itemData as $item){
             if(isset($item['uuid']) && $item['uuid']==$parentkey) {
-                $dataArr[] = $item;//$this->getSonDataTree($v['son'], $dataArr[$k]['son']);
+                $dataArr[] = isset($item['son']) ? $item['son'] : [];//$this->getSonDataTree($v['son'], $dataArr[$k]['son']);
             } else {
                 $this->getSonDataTree($item, $parentkey, $dataArr);
             }
