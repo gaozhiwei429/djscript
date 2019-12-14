@@ -33,7 +33,9 @@ class LeadersController extends UserBaseController
         $size = intval(Yii::$app->request->post('size', 10));
         $bannerService = new LeadersService();
         $params = [];
-        return $bannerService->getList($params, ['sort'=>SORT_DESC,'id'=>SORT_ASC], $page, $size);
+        return $bannerService->getList($params, ['sort'=>SORT_DESC,'id'=>SORT_ASC], $page, $size,
+            ['id','full_name','avatar_img','sort','life_start_date','life_end_date']
+        );
     }
 
     /**
