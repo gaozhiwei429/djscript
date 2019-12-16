@@ -14,7 +14,7 @@ use appcomponents\modules\common\LessionService;
 use source\controllers\UserBaseController;
 use source\manager\BaseService;
 use Yii;
-class CourseTypeController extends UserBaseController
+class LessionController extends UserBaseController
 {
     public function beforeAction($action){
         $this->noLogin = false;

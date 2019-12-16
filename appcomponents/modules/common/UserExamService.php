@@ -1,7 +1,7 @@
 <?php
 /**
- * 题库问题相关的数据获取service
- * @文件名称: QuestionService.php
+ * 用户考试相关的数据管理获取service
+ * @文件名称: UserExamService.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Mobile: 15910987706
@@ -10,12 +10,12 @@
  * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 namespace appcomponents\modules\common;
-use appcomponents\modules\common\models\QuestionModel;
+use appcomponents\modules\common\models\UserExamModel;
 use source\libs\Common;
 use source\manager\BaseException;
 use source\manager\BaseService;
 use Yii;
-class QuestionService extends BaseService
+class UserExamService extends BaseService
 {
     /**
      * @inheritdoc
@@ -27,54 +27,40 @@ class QuestionService extends BaseService
     public function init() {
         parent::init();
     }
-    /**
-     * 只获取数据列表数组获取
-     * @param $addData
-     * @return array
-     */
-    public function getListData($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*'], $index=false) {
-        $Common = new Common();
-        $offset = $Common->getOffset($limit, $p);
-        $carModel = new QuestionModel();
-        $cityList = $carModel->getDatas($params, $orderBy, $offset, $limit, $fied, $index);
-        if(!empty($cityList)) {
-            return BaseService::returnOkData($cityList);
-        }
-        return BaseService::returnErrData([], 500, "暂无数据");
-    }
+
     /**
      * 数据获取
      * @param $addData
      * @return array
      */
-    public function getList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*'], $index=false) {
+    public function getList($params = [], $orderBy = [], $p = 1, $limit = 10, $fied=['*']) {
         $Common = new Common();
         $offset = $Common->getOffset($limit, $p);
-        $carModel = new QuestionModel();
-        $cityList = $carModel->getListData($params, $orderBy, $offset, $limit, $fied, $index);
+        $newsModel = new UserExamModel();
+        $cityList = $newsModel->getListData($params, $orderBy, $offset, $limit, $fied);
         if(!empty($cityList)) {
             return BaseService::returnOkData($cityList);
         }
         return BaseService::returnErrData([], 500, "暂无数据");
     }
     /**
-     * 获取详情数据
+     * 详情数据
      * @param $params
      * @return array
      */
-    public function getInfo($params) {
+    public function getInfo($params,$field=['*']) {
         if(empty($params)) {
             return BaseService::returnErrData([], 55000, "请求参数异常");
         }
-        $carModel = new QuestionModel();
-        $bannerInfo = $carModel->getInfoByValue($params);
-        if(!empty($bannerInfo)) {
-            return BaseService::returnOkData($bannerInfo);
+        $newsModel = new UserExamModel();
+        $newsInfo = $newsModel->getInfoByValue($params,$field);
+        if(!empty($newsInfo)) {
+            return BaseService::returnOkData($newsInfo);
         }
         return BaseService::returnErrData([], 500, "暂无数据");
     }
     /**
-     * 编辑详情数据
+     * 论坛资讯详情数据
      * @param $params
      * @return array
      */
@@ -82,16 +68,16 @@ class QuestionService extends BaseService
         if(empty($dataInfo)) {
             return BaseService::returnErrData([], 56900, "请求参数异常");
         }
-        $carModel = new QuestionModel();
+        $newsModel = new UserExamModel();
         $id = isset($dataInfo['id']) ? $dataInfo['id'] : 0;
         $editRest = 0;
         if($id) {
             if(isset($dataInfo['id'])) {
                 unset($dataInfo['id']);
             }
-            $editRest = $carModel->updateInfo($id, $dataInfo);
+            $editRest = $newsModel->updateInfo($id, $dataInfo);
         } else {
-            $editRest = $carModel->addInfo($dataInfo);
+            $editRest = $newsModel->addInfo($dataInfo);
         }
         if(!empty($editRest)) {
             return BaseService::returnOkData($editRest);

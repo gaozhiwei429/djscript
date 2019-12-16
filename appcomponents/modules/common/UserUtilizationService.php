@@ -94,6 +94,7 @@ class UserUtilizationService extends BaseService
         $utilizationParams[] = ['in', 'id', $utilizationIds];
         $utilizationRet = $utilizationService->getList($utilizationParams,[],1,-1,['id']);
         $utilizationData = BaseService::getRetData($utilizationRet);
+
         if(isset($utilizationData['count']) && $utilizationData['count']!=count($utilizationIds)){
             return BaseService::returnErrData([], 59800, "请求参数异常");
         }

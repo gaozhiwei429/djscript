@@ -22,7 +22,6 @@ class UtilizationController extends UserBaseController
      * @return array
      */
     public function beforeAction($action){
-    $this->noLogin = false;
     $userToken = $this->userToken();
     return parent::beforeAction($action);
 }
