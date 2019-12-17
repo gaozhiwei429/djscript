@@ -67,7 +67,26 @@ class QuestionModel extends BaseModel
         }
         if($index) {
             $dataArr = [];
-            foreach($dataList as $k=>$v) {
+            $regex4="/<p.*?>.*?<\/p>/ism";
+            foreach($dataList as $k=>&$v) {
+                $v['problemSon'] = [];
+                $problemSon = [];
+                if(isset($v['type']) && ($v['type']==1 || $v['type']==2 || $v['type']==3)) {
+                    if(isset($v['problem'])) {
+                        preg_match_all($regex4, $v['problem'], $son);
+                        $son = array_filter($son);
+                        if(isset($son[0])) {
+                            foreach($son[0] as $sonK=>&$sonV) {
+                                if($sonV!="<p></p>") {
+                                    $problemSon[] = $sonV;
+                                }
+                            }
+                            $v['problemSon'] =$problemSon;
+                        } else {
+                            $v['problemSon'] =$son;
+                        }
+                    }
+                }
                 if(isset($v['id'])) {
                     $dataArr[$v['id']] = $v;
                 }
