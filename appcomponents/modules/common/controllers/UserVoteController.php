@@ -10,7 +10,9 @@
  * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 namespace appcomponents\modules\common\controllers;
+use appcomponents\modules\common\OrganizationService;
 use appcomponents\modules\common\UserVoteService;
+use appcomponents\modules\common\VoteService;
 use source\controllers\UserBaseController;
 use source\manager\BaseService;
 use Yii;
@@ -97,42 +99,67 @@ class UserVoteController extends UserBaseController
      * 详情数据编辑
      * @return array
      */
-    public function actionEdit() {
+    public function actionSubmit() {
         if (!isset($this->user_id) || !$this->user_id) {
             return BaseService::returnErrData([], 5001, "当前账号登陆异常");
         }
         $id = intval(Yii::$app->request->post('id', 0));
         $vote_id = intval(Yii::$app->request->post('vote_id', 0));
-        $anwser = intval(Yii::$app->request->post('anwser', 0));
-        $organization_id = intval(Yii::$app->request->post('organization_id', 0));
+        $anwser = Yii::$app->request->post('anwser', []);
+        $status = intval(Yii::$app->request->post('status', 0));
+        $organization_id = 0;
         $newsService = new UserVoteService();
         if(empty($vote_id) || empty($anwser)) {
             return BaseService::returnErrData([], 55900, "提交参数异常");
         }
 		$dataInfo = [];
         if(!empty($vote_id)) {
-            $dataInfo['vote_id'] = $vote_id;
+            $voteParams = [];
+            $voteParams[] = ['=', 'id', $vote_id];
+            $voteParams[] = ['=', 'status', 1];
+            $voteService = new VoteService();
+            $voteInfoRet = $voteService->getInfo($voteParams);
+            $voteInfo = BaseService::getRetData($voteInfoRet);
+            if(!empty($voteInfo)){
+                $dataInfo['vote_id'] = isset($voteInfo['id']) ? $voteInfo['id'] : 0;
+                $organization_id = isset($voteInfo['organization_id']) ? $voteInfo['organization_id'] : 0;
+            } else {
+                return BaseService::returnErrData([], 512400, "当前投票还未开始");
+            }
         } else {
-            $dataInfo['vote_id'] = 0;
+            return BaseService::returnErrData([], 512400, "当前投票不存在");
+        }
+        if(!is_array($anwser)) {
+            return BaseService::returnErrData([], 512400, "投票结果参数有误");
         }
         if(!empty($anwser)) {
-            $dataInfo['anwser'] = $anwser;
+            $dataInfo['anwser'] = is_array($anwser) ? json_encode($anwser) : json_encode([]);
         } else {
-            $dataInfo['anwser'] = 0;
+            $dataInfo['anwser'] = json_encode([]);
         }
         if(!empty($id)) {
             $dataInfo['id'] = $id;
         } else {
             $dataInfo['id'] = 0;
         }
-        if(!empty($organization_id)) {
-            $dataInfo['organization_id'] = $organization_id;
+
+        if(empty($organization_id)) {
+            return BaseService::returnErrData([], 514100, "请提交党组织");
         } else {
-            $dataInfo['organization_id'] = 0;
+            $organizationService = new OrganizationService();
+            $organizationParams = [];
+            $organizationParams[] = ['=', 'id', $organization_id];
+            $organizationParams[] = ['!=', 'status', -1];
+            $userOrganizationInfoRet = $organizationService->getInfo($organizationParams);
+            if(!BaseService::checkRetIsOk($userOrganizationInfoRet)) {
+                return BaseService::returnErrData([], 514800, "该党组织不存在，或已下线");
+            }
         }
+        $dataInfo['organization_id'] = $organization_id;
         if(empty($dataInfo)) {
             return BaseService::returnErrData([], 58000, "提交数据有误");
         }
+        $dataInfo['status'] = $status;
         return $newsService->editInfo($dataInfo);
     }
 }

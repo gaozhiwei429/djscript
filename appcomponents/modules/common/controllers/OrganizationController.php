@@ -42,7 +42,7 @@ class OrganizationController extends  UserBaseController
             $params[] = ['=', 'parent_uuid', $parent_uuid];
         }
         $params[] = ['=', 'status', 1];
-        return $organizationService->getList($params, ['id'=>SORT_DESC,'sort'=>SORT_DESC], $page, $size,['uuid','title','parent_uuid','organization_type','branch_type']);
+        return $organizationService->getList($params, ['id'=>SORT_DESC,'sort'=>SORT_DESC], $page, $size,['id','uuid','title','parent_uuid','organization_type','branch_type']);
     }
 
     /**
@@ -75,7 +75,7 @@ class OrganizationController extends  UserBaseController
         $params = [];
         $params[] = ['!=', 'status', 0];
         return $organizationService->getTree($params, ['id'=>SORT_ASC], 1, -1,
-            $fied=['uuid','title','parent_uuid','organization_type','branch_type','contacts'],
+            $fied=['id','uuid','title','parent_uuid','organization_type','branch_type','contacts'],
             true,$parent_uuid);
     }
 }

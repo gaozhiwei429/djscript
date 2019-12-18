@@ -136,7 +136,7 @@ class UserVoteModel extends BaseModel
             $thisModel->vote_id = isset($addData['vote_id']) ? intval($addData['vote_id']) : 0;
             $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
             $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->anwser = isset($addData['anwser']) ? intval($addData['anwser']) : 0;
+            $thisModel->anwser = (isset($addData['anwser']) && is_array($addData['anwser'])) ? json_encode($addData['anwser']) : json_encode([]);
             $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();

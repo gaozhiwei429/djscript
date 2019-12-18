@@ -10,6 +10,7 @@
  * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 namespace appcomponents\modules\common\controllers;
+use appcomponents\modules\common\OrganizationService;
 use appcomponents\modules\common\VoteService;
 use source\controllers\UserBaseController;
 use source\manager\BaseService;
@@ -88,10 +89,10 @@ class VoteController extends UserBaseController
         return $newsService->editInfo($dataInfo);
     }
     /**
-     * 详情数据编辑
+     * 发布投票
      * @return array
      */
-    public function actionEdit() {
+    public function actionSubmit() {
         if (!isset($this->user_id) || !$this->user_id) {
             return BaseService::returnErrData([], 5001, "当前账号登陆异常");
         }
@@ -103,17 +104,8 @@ class VoteController extends UserBaseController
         $type = intval(Yii::$app->request->post('type', 0));
         $sort = intval(Yii::$app->request->post('sort', 0));
         $organization_id = intval(Yii::$app->request->post('organization_id', 0));
-        $startandenddate = trim(Yii::$app->request->post('startandenddate', null));
-        $dataInfo = [];
-        if(!empty($startandenddate)) {
-            $startandenddateArr = explode(" - ", $startandenddate);
-            if(!empty($startandenddateArr[0]) && isset($startandenddateArr[0])) {
-                $dataInfo['start_time'] = $startandenddateArr[0];
-            }
-            if(!empty($startandenddateArr[1]) && isset($startandenddateArr[1])) {
-                $dataInfo['end_time'] = $startandenddateArr[1];
-            }
-        }
+        $start_time = trim(Yii::$app->request->post('start_time', ""));
+        $end_time = trim(Yii::$app->request->post('end_time', ""));
         $mettingService = new VoteService();
         if(empty($title)) {
             return BaseService::returnErrData([], 55900, "投票主题不能为空");
@@ -121,19 +113,31 @@ class VoteController extends UserBaseController
         if(empty($content)) {
             return BaseService::returnErrData([], 55900, "投票选项不能为空");
         }
+        if(empty($start_time)) {
+            return BaseService::returnErrData([], 512000, "请选择投票开始时间");
+        }
+        if(empty($end_time)) {
+            return BaseService::returnErrData([], 512300, "请选择投票截止时间");
+        }
+        if(empty($type)) {
+            return BaseService::returnErrData([], 512300, "请选择投票类型");
+        }
         if(empty($organization_id)) {
-            return BaseService::returnErrData([], 55900, "请选择党组织");
+            return BaseService::returnErrData([], 514100, "请选择党组织");
+        } else {
+            $organizationService = new OrganizationService();
+            $organizationParams = [];
+            $organizationParams[] = ['=', 'id', $organization_id];
+            $organizationParams[] = ['!=', 'status', -1];
+            $userOrganizationInfoRet = $organizationService->getInfo($organizationParams);
+            if(!BaseService::checkRetIsOk($userOrganizationInfoRet)) {
+                return BaseService::returnErrData([], 514800, "该党组织不存在，或已下线");
+            }
         }
         $dataInfo = [];
-        if(!empty($startandenddate)) {
-            $startandenddateArr = explode(" - ", $startandenddate);
-            if(!empty($startandenddateArr[0]) && isset($startandenddateArr[0])) {
-                $dataInfo['start_time'] = $startandenddateArr[0];
-            }
-            if(!empty($startandenddateArr[1]) && isset($startandenddateArr[1])) {
-                $dataInfo['end_time'] = $startandenddateArr[1];
-            }
-        }
+        $dataInfo['start_time'] = $start_time;
+        $dataInfo['end_time'] = $end_time;
+            $dataInfo['organization_id'] = $organization_id;
 
         if(!empty($title)) {
             $dataInfo['title'] = $title;
@@ -144,11 +148,6 @@ class VoteController extends UserBaseController
             $dataInfo['type'] = $type;
         } else {
             $dataInfo['type'] = 0;
-        }
-        if(!empty($organization_id)) {
-            $dataInfo['organization_id'] = $organization_id;
-        } else {
-            $dataInfo['organization_id'] = 0;
         }
         if(!empty($address)) {
             $dataInfo['address'] = $address;
@@ -170,6 +169,7 @@ class VoteController extends UserBaseController
         }
         $dataInfo['status'] = $status;
         $dataInfo['sort'] = $sort;
+        $dataInfo['user_id'] = $this->user_id;
         return $mettingService->editInfo($dataInfo);
     }
 }
