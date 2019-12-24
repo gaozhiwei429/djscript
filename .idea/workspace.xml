@@ -2,36 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4cdb9383-dcca-4918-bfc9-ebeabb0581f2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/UserStudyModel.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/appcomponents/modules/common/UserStudyService.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/AddrAreaModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/AddrAreaModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/AddrCityModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/AddrCityModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/AddrProvinceModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/AddrProvinceModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/libs/Common.php" afterPath="$PROJECT_DIR$/source/libs/Common.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/CourseModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/CourseModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/DangHistoryModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/DangHistoryModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/DangTodayModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/DangTodayModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/ExamModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/ExamModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/ForumModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/ForumModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/LessionModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/LessionModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/LevelModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/LevelModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/MettingModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/MettingModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/NewsModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/NewsModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/NoticeModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/NoticeModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/order/OrderService.php" afterPath="$PROJECT_DIR$/appcomponents/modules/order/OrderService.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/OrganizationApplyController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/OrganizationApplyController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/OrganizationModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/OrganizationModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/QuestionModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/QuestionModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/SectionsModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/SectionsModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/TypeModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/TypeModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/UserMettingModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/UserMettingModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/UserOrganizationModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/UserOrganizationModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserVoteController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserVoteController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/UserVoteModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/UserVoteModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/VerifyCodeModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/VerifyCodeModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/VoteModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/VoteModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="script.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -69,8 +40,8 @@
       <file leaf-file-name="CourseController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.31129476" vertical-offset="9974" max-vertical-offset="11425">
-              <caret line="408" column="29" selection-start-line="408" selection-start-column="29" selection-end-line="408" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.1046832" vertical-offset="10024" max-vertical-offset="12200">
+              <caret line="404" column="19" selection-start-line="404" selection-start-column="7" selection-end-line="404" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -377,14 +348,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1616" height="876" extended-state="7" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.028125" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.116875" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -788,8 +759,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31129476" vertical-offset="9974" max-vertical-offset="11425">
-          <caret line="408" column="29" selection-start-line="408" selection-start-column="29" selection-end-line="408" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.1046832" vertical-offset="10024" max-vertical-offset="12200">
+          <caret line="404" column="19" selection-start-line="404" selection-start-column="7" selection-end-line="404" selection-end-column="19" />
           <folding />
         </state>
       </provider>

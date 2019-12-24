@@ -401,7 +401,38 @@ class CourseController extends UserBaseController
         }
         return $ret;
     }
-
+    /**
+     * 检查课程是否加入我的课程
+     * @return array
+     */
+    public function actionCheckJoin() {
+        if (!isset($this->user_id) || !$this->user_id) {
+            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
+        }
+        $course_id = intval(Yii::$app->request->post('course_id', 0));
+        $courseService = new CourseService();
+        $params = [];
+        $params[] = ['=', 'id', $course_id];
+        $params[] = ['=', 'status', 1];
+        $courseInfoRet = $courseService->getInfo($params);
+        if(!BaseService::checkRetIsOk($courseInfoRet)) {
+            return BaseService::returnErrData([], 533600, "当前课程不存在");
+        }
+        $courseInfo = BaseService::getRetData($courseInfoRet);
+        if($courseInfo['elective_type']==2) {
+            return BaseService::returnErrData([], 534000, "当前课程为必修课，无需检查");
+        }
+        $userCourseService = new UserCourseService();
+        $userCourseParams = [];
+        $userCourseParams[] = ['=', 'course_id', $course_id];
+        $userCourseParams[] = ['=', 'user_id', $this->user_id];
+        $userCourseParams[] = ['=', 'is_del', 0];
+        $ret = $userCourseService->getInfo($userCourseParams);
+        if(BaseService::checkRetIsOk($ret)) {
+            return BaseService::returnOkData([]);
+        }
+        return BaseService::returnErrData([], 543400, "没有加入课程");
+    }
     /**
      * 正在学习多少课，已完成多少课，累计学习时长
      * @return array
