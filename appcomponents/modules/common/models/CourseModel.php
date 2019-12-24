@@ -57,19 +57,17 @@ class CourseModel extends BaseModel
         if (!empty($orderBy)) {
             $query -> orderBy($orderBy);
         }
-        $projectList = $query->asArray()->all();
-        $projectListArr = [];
+        $dataList = $query->asArray()->all();
         if($index) {
-            foreach($projectList as $projectInfo) {
-                if(isset($projectInfo['id']) && $projectInfo['id']) {
-                    $projectListArr[$projectInfo['id']] = $projectInfo;
+            $dataArr = [];
+            foreach($dataList as $k=>$v) {
+                if(isset($v['id'])) {
+                    $dataArr[$v['id']] = $v;
                 }
             }
-            if(!empty($projectListArr)) {
-                return $projectListArr;
-            }
+            $dataList = $dataArr;
         }
-        return $projectList;
+        return $dataList;
     }
     /**
      * 获取banner首页数据展示
@@ -80,8 +78,8 @@ class CourseModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
-        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
+        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
     }
     /**
      * 获取分页数据列表
@@ -149,10 +147,13 @@ class CourseModel extends BaseModel
             $thisModel->elective_type = isset($addData['elective_type']) ? intval($addData['elective_type']) : 1;
             $thisModel->pic_url = isset($addData['pic_url']) ? trim($addData['pic_url']) : ""; //文章图片
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->sections_ids = (isset($addData['sections_ids']) && !empty($addData['sections_ids']))
-                ? $addData['sections_ids'] : "";//章节id集合
             $thisModel->sections_count = isset($addData['sections_count']) ? intval($addData['sections_count']) : 0;
             $thisModel->lessions_count = isset($addData['lessions_count']) ? intval($addData['lessions_count']) : 0;
+            $thisModel->study_count = isset($addData['study_count']) ? intval($addData['study_count']) : 0;
+            $thisModel->sections_ids = isset($addData['sections_ids'])&&!empty($addData['sections_ids'])
+                ? $addData['sections_ids'] : "";//章节id集合
+            $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";//开始学习时间
+            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";//结束学习时间
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

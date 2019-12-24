@@ -1,7 +1,7 @@
 <?php
 /**
- * 用户投票记录管理表
- * @文件名称: UserVoteModel.php
+ * 部门相关的管理
+ * @文件名称: DepartmentModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,13 +14,13 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class UserVoteModel extends BaseModel
+class DepartmentModel extends BaseModel
 {
-    const WAIT_APPROVAL_STATUS = 1;//待审批
-    const ALREADY_APPROVAL_STATUS = 2;//已审批
-    const BEFORT_STATUS = 0;//禁用
+    const DELETE_STATUS = -1;//已删除
+    const ON_LINE_STATUS = 1;//已上线
+    const BEFORT_STATUS = 0;//已下线
     public static function tableName() {
-        return '{{%user_vote}}';
+        return '{{%department}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -28,8 +28,8 @@ class UserVoteModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByValue($params,$field=['*']){
-        return $this->getOne($params,$field);
+    public function getInfoByValue($params){
+        return $this->getOne($params);
     }
     /**
      * 获取数据集
@@ -40,7 +40,7 @@ class UserVoteModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
+    public function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=false) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -59,10 +59,19 @@ class UserVoteModel extends BaseModel
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
+        $projectListData = [];
+        if($index) {
+            foreach($projectList as $projectInfo) {
+                if(isset($projectInfo['id'])) {
+                    $projectListData[$projectInfo['id']] = $projectInfo;
+                }
+            }
+            return $projectListData;
+        }
         return $projectList;
     }
     /**
-     * 获取数据展示
+     * 获取banner首页数据展示
      * @param array $params
      * @param array $orderBy
      * @param int $offset
@@ -70,7 +79,7 @@ class UserVoteModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
+    public function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
         return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
     }
     /**
@@ -82,9 +91,9 @@ class UserVoteModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
+    public function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,
@@ -96,6 +105,7 @@ class UserVoteModel extends BaseModel
             return $data;
 //            $query->createCommand()->getRawSql();
         } catch (BaseException $e) {
+            DmpLog::warning('getListData_department_Model_error', $e);
             return [];
         }
     }
@@ -104,7 +114,7 @@ class UserVoteModel extends BaseModel
      * @param $params
      * @return int
      */
-    public static function getCount($params, $fied=['*']) {
+    public function getCount($params, $fied=['*']) {
         try {
             $query = self::find()->select($fied);
             if(!empty($params)) {
@@ -119,6 +129,7 @@ class UserVoteModel extends BaseModel
 //                return $query->createCommand()->getRawSql();
             return  $query->count();
         } catch (BaseException $e) {
+            DmpLog::warning('getCount_department_Model_error', $e);
             return 0;
         }
     }
@@ -132,31 +143,27 @@ class UserVoteModel extends BaseModel
         try {
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
-            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
-            $thisModel->vote_id = isset($addData['vote_id']) ? intval($addData['vote_id']) : 0;
-            $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->full_name = isset($addData['full_name']) ? trim($addData['full_name']) : "";
-            $thisModel->avatar_img = isset($addData['avatar_img']) ? trim($addData['avatar_img']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->user_organization_id = isset($addData['user_organization_id']) ? intval($addData['user_organization_id']) : 0;
-            $thisModel->user_level_id = isset($addData['user_level_id']) ? intval($addData['user_level_id']) : 0;
-            $thisModel->anwser = (isset($addData['anwser']) && is_array($addData['anwser'])) ? json_encode($addData['anwser']) : json_encode([]);
-            $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
+            $thisModel->name = isset($addData['name']) ? trim($addData['name']) : "";//部门名称
+            $thisModel->parent_id = isset($addData['parent_id']) ? intval($addData['parent_id']) : 0;//父id
+            $thisModel->description = isset($addData['description']) ? trim($addData['description']) : "";//描述
+            $thisModel->create_admin_id = isset($addData['create_admin_id']) ? intval($addData['create_admin_id']) : 0;//部门创建人用户id
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
         } catch (BaseException $e) {
+            DmpLog::error('insert_department_model_error', $e);
             return false;
         }
     }
+
     /**
      * 更新信息数据
      * @param int $id ID
      * @param array $updateInfo 需要更新的数据集合
      * @return bool
      */
-    public static function updateInfo($id, $updateInfo) {
+    public function updateInfo($id, $updateInfo) {
         try {
             $datainfo = self::findOne(['id' => $id]);
             if(!empty($updateInfo)) {
@@ -167,25 +174,8 @@ class UserVoteModel extends BaseModel
             }
             return false;
         } catch (BaseException $e) {
+            DmpLog::error('update_department_model_error', $e);
             return false;
         }
-    }
-    /**
-     * 批量添加记录数据
-     * @param $user_id
-     * @param $files
-     * @return int
-     * @throws \yii\db\Exception
-     */
-    public function addAll($datas) {
-        $data = [];
-        $clumns = (isset($datas[0]) && !empty($datas[0])) ? array_keys($datas[0]) : [];
-        if(empty($clumns)) {
-            return false;
-        }
-        foreach ($datas as $k => $v) {
-            $data[] = $v;
-        }
-        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $clumns, $data)->execute();
     }
 }

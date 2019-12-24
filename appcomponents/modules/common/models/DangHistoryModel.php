@@ -134,6 +134,7 @@ class DangHistoryModel extends BaseModel
             $thisModel->day = isset($addData['day']) ? intval($addData['day']) : 0;
             $thisModel->title   = isset($addData['title']) ? trim($addData['title']) : "";
             $thisModel->content = isset($addData['content']) ? trim($addData['content']) : "";
+            $thisModel->dang_today_id = isset($addData['dang_today_id']) ? intval($addData['dang_today_id']) : 0;
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
 			$thisModel->save();

@@ -1,7 +1,7 @@
 <?php
 /**
- * 用户投票记录管理表
- * @文件名称: UserVoteModel.php
+ * 运营平台区域管理表
+ * @文件名称: RegionModel.php
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,13 +14,12 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class UserVoteModel extends BaseModel
+class RegionModel extends BaseModel
 {
-    const WAIT_APPROVAL_STATUS = 1;//待审批
-    const ALREADY_APPROVAL_STATUS = 2;//已审批
-    const BEFORT_STATUS = 0;//禁用
+    const ON_LINE_STATUS = 1;//已上线
+    const BEFORT_STATUS = 0;//已下线
     public static function tableName() {
-        return '{{%user_vote}}';
+        return '{{%region}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -28,8 +27,8 @@ class UserVoteModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByValue($params,$field=['*']){
-        return $this->getOne($params,$field);
+    public function getInfoByValue($params){
+        return $this->getOne($params);
     }
     /**
      * 获取数据集
@@ -62,7 +61,7 @@ class UserVoteModel extends BaseModel
         return $projectList;
     }
     /**
-     * 获取数据展示
+     * 获取banner首页数据展示
      * @param array $params
      * @param array $orderBy
      * @param int $offset
@@ -96,6 +95,7 @@ class UserVoteModel extends BaseModel
             return $data;
 //            $query->createCommand()->getRawSql();
         } catch (BaseException $e) {
+            DmpLog::warning('getListData_regionModel_error', $e);
             return [];
         }
     }
@@ -119,6 +119,7 @@ class UserVoteModel extends BaseModel
 //                return $query->createCommand()->getRawSql();
             return  $query->count();
         } catch (BaseException $e) {
+            DmpLog::warning('getCount_regionModel_error', $e);
             return 0;
         }
     }
@@ -132,24 +133,20 @@ class UserVoteModel extends BaseModel
         try {
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
-            $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
-            $thisModel->vote_id = isset($addData['vote_id']) ? intval($addData['vote_id']) : 0;
-            $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->full_name = isset($addData['full_name']) ? trim($addData['full_name']) : "";
-            $thisModel->avatar_img = isset($addData['avatar_img']) ? trim($addData['avatar_img']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->user_organization_id = isset($addData['user_organization_id']) ? intval($addData['user_organization_id']) : 0;
-            $thisModel->user_level_id = isset($addData['user_level_id']) ? intval($addData['user_level_id']) : 0;
-            $thisModel->anwser = (isset($addData['anwser']) && is_array($addData['anwser'])) ? json_encode($addData['anwser']) : json_encode([]);
-            $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
+            $thisModel->region_code = isset($addData['region_code']) ? trim($addData['region_code']) : "";//区域编码
+            $thisModel->region_name = isset($addData['region_name']) ? trim($addData['region_name']) : "";//区域编码
+            $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
+            $thisModel->project_id = isset($addData['pid']) ? intval($addData['pid']) : 0;
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
         } catch (BaseException $e) {
+            DmpLog::error('insert_region_model_error', $e);
             return false;
         }
     }
+
     /**
      * 更新信息数据
      * @param int $id ID
@@ -167,25 +164,8 @@ class UserVoteModel extends BaseModel
             }
             return false;
         } catch (BaseException $e) {
+            DmpLog::error('update_region_model_error', $e);
             return false;
         }
-    }
-    /**
-     * 批量添加记录数据
-     * @param $user_id
-     * @param $files
-     * @return int
-     * @throws \yii\db\Exception
-     */
-    public function addAll($datas) {
-        $data = [];
-        $clumns = (isset($datas[0]) && !empty($datas[0])) ? array_keys($datas[0]) : [];
-        if(empty($clumns)) {
-            return false;
-        }
-        foreach ($datas as $k => $v) {
-            $data[] = $v;
-        }
-        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $clumns, $data)->execute();
     }
 }

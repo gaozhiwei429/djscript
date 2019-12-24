@@ -154,9 +154,6 @@ class ForumModel extends BaseModel
             $thisModel->collection_num = isset($addData['collection_num']) ? intval($addData['collection_num']) : 0;//收藏数量
             $thisModel->comment_num = isset($addData['comment_num']) ? intval($addData['comment_num']) : 0;//评论数量
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->is_hot = isset($addData['is_hot']) ? intval($addData['is_hot']) : 0;
-            $thisModel->organization_title = isset($addData['organization_title']) ? trim($addData['organization_title']) : "";//党支部名称
-            $thisModel->organization_id = isset($addData['organization_id']) ? trim($addData['organization_id']) : "";//发布者所属党支部
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

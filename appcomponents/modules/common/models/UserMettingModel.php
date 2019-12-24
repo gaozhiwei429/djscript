@@ -137,11 +137,15 @@ class UserMettingModel extends BaseModel
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
+            $thisModel->user_organization_id = isset($addData['user_organization_id']) ? intval($addData['user_organization_id']) : 0;//名称
+            $thisModel->user_level_id = isset($addData['user_level_id']) ? intval($addData['user_level_id']) : 0;//职务
             $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;//名称
             $thisModel->metting_id = isset($addData['metting_id']) ? intval($addData['metting_id']) : 0;//名称
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::WAIT_JOIN_STATUS;
             $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";//冗余会议开始时间
             $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";//冗余会议截止时间
+            $thisModel->full_name = isset($addData['full_name']) ? trim($addData['full_name']) : "";//冗余用户姓名
+            $thisModel->avatar_img = isset($addData['avatar_img']) ? trim($addData['avatar_img']) : "";//冗余用户头像
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
@@ -168,5 +172,23 @@ class UserMettingModel extends BaseModel
         } catch (BaseException $e) {
             return false;
         }
+    }
+    /**
+     * 批量添加记录数据
+     * @param $user_id
+     * @param $files
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function addAll($datas) {
+        $data = [];
+        $clumns = (isset($datas[0]) && !empty($datas[0])) ? array_keys($datas[0]) : [];
+        if(empty($clumns)) {
+            return false;
+        }
+        foreach ($datas as $k => $v) {
+            $data[] = $v;
+        }
+        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $clumns, $data)->execute();
     }
 }

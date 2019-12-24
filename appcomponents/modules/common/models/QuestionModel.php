@@ -67,26 +67,7 @@ class QuestionModel extends BaseModel
         }
         if($index) {
             $dataArr = [];
-            $regex4="/<p.*?>.*?<\/p>/ism";
-            foreach($dataList as $k=>&$v) {
-                $v['problemSon'] = [];
-                $problemSon = [];
-                if(isset($v['type']) && ($v['type']==1 || $v['type']==2 || $v['type']==3)) {
-                    if(isset($v['problem'])) {
-                        preg_match_all($regex4, $v['problem'], $son);
-                        $son = array_filter($son);
-                        if(isset($son[0])) {
-                            foreach($son[0] as $sonK=>&$sonV) {
-                                if($sonV!="<p></p>") {
-                                    $problemSon[] = $sonV;
-                                }
-                            }
-                            $v['problemSon'] =$problemSon;
-                        } else {
-                            $v['problemSon'] =$son;
-                        }
-                    }
-                }
+            foreach($dataList as $k=>$v) {
                 if(isset($v['id'])) {
                     $dataArr[$v['id']] = $v;
                 }
@@ -170,10 +151,10 @@ class QuestionModel extends BaseModel
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->uuid = isset($addData['uuid']) ? trim($addData['uuid']) : null;
             $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";
-            $thisModel->exam_id = isset($addData['exam_id']) ? intval($addData['exam_id']) : 0;
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->problem = isset($addData['problem']) ? trim($addData['problem']) : "";
             $thisModel->answer = isset($addData['answer']) ? trim($addData['answer']) : "";
+            $thisModel->analysis = isset($addData['analysis']) ? trim($addData['analysis']) : "";
             $thisModel->type = isset($addData['type']) ? intval($addData['type']) : 0;
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
 			$thisModel->save();

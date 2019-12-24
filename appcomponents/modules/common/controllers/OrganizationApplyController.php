@@ -13,6 +13,7 @@ namespace appcomponents\modules\common\controllers;
 use appcomponents\modules\common\OrganizationApplyService;
 use appcomponents\modules\common\OrganizationService;
 use appcomponents\modules\common\UserOrganizationService;
+use appcomponents\modules\passport\PassportService;
 use source\controllers\UserBaseController;
 use source\libs\Common;
 use source\manager\BaseService;
@@ -49,9 +50,107 @@ class OrganizationApplyController extends  UserBaseController
         } else {
             $params[] = ['=', 'submit_user_id', $this->user_id];
         }
-        return $organizationApplyService->getList($params, ['id'=>SORT_DESC], $page, $size,
-            ['old_organization_id','new_organization_id','user_id','submit_user_id','type','area_type','status','user_id']
+
+        $organizationApplyListRet = $organizationApplyService->getList($params, ['id'=>SORT_DESC], $page, $size,
+            ['old_organization_id','new_organization_id','user_id','submit_user_id','apply_user_id','send_user_id','type','area_type','status','user_id']
         );
+        if(BaseService::checkRetIsOk($organizationApplyListRet)) {
+            $organizationApplyList = BaseService::getRetData($organizationApplyListRet);
+//            $organizationApplyData = isset($organizationApplyList['dataList']) ? $organizationApplyList['dataList'] : [];
+            if(isset($organizationApplyList['dataList']) && !empty($organizationApplyList['dataList'])) {
+                $organizationIds = [];
+                $userIds = [];
+                foreach($organizationApplyList['dataList'] as $organizationApplyInfo) {
+                    if(isset($organizationApplyInfo['old_organization_id']) && $organizationApplyInfo['old_organization_id']) {
+                        $organizationIds[] = $organizationApplyInfo['old_organization_id'];
+                    }
+                    if(isset($organizationApplyInfo['new_organization_id']) && $organizationApplyInfo['new_organization_id']) {
+                        $organizationIds[] = $organizationApplyInfo['new_organization_id'];
+                    }
+                    if(isset($organizationApplyInfo['user_id']) && $organizationApplyInfo['user_id']) {
+                        $userIds[] = $organizationApplyInfo['user_id'];
+                    }
+                    if(isset($organizationApplyInfo['submit_user_id']) && $organizationApplyInfo['submit_user_id']) {
+                        $userIds[] = $organizationApplyInfo['submit_user_id'];
+                    }
+                    if(isset($organizationApplyInfo['apply_user_id']) && $organizationApplyInfo['apply_user_id']) {
+                        $userIds[] = $organizationApplyInfo['apply_user_id'];
+                    }
+                    if(isset($organizationApplyInfo['send_user_id']) && $organizationApplyInfo['send_user_id']) {
+                        $userIds[] = $organizationApplyInfo['send_user_id'];
+                    }
+                }
+                $organizationList = [];
+                if(!empty($organizationIds)) {
+                    $organizationIds = array_unique($organizationIds);
+                    $organizationParams[] = ['in','id', $organizationIds];
+                    $organizationService = new OrganizationService();
+                    $organizationListRet = $organizationService->getDataListByIndexId($organizationParams, [], 1, count($organizationIds), ['id','title'],true);
+                    if(BaseService::checkRetIsOk($organizationListRet)) {
+                        $organizationListData = BaseService::getRetData($organizationListRet);
+                        $organizationList = isset($organizationListData['dataList']) ? $organizationListData['dataList'] : [];
+                    }
+                }
+                $passportList = [];
+                if(!empty($userIds)) {
+                    $userIds = array_unique($userIds);
+                    $userParams[] = ['in','id', $userIds];
+                    $passportService = new PassportService();
+                    $passportListRet = $passportService->getList($userParams, [], 1, count($userIds), ['id'],true,true);
+                    if(BaseService::checkRetIsOk($passportListRet)) {
+                        $passportListData = BaseService::getRetData($passportListRet);
+                        $passportList = isset($passportListData['dataList']) ? $passportListData['dataList'] : [];
+                    }
+                }
+                foreach($organizationApplyList['dataList'] as &$organizationApplyInfo) {
+                    $organizationApplyInfo['old_organization_title'] = "";
+                    $organizationApplyInfo['new_organization_title'] = "";
+                    $organizationApplyInfo['full_name'] = "";
+                    $organizationApplyInfo['avatar_img'] = "";
+                    $organizationApplyInfo['submit_user_full_name'] = "";
+                    $organizationApplyInfo['submit_user_avatar_img'] = "";
+                    $organizationApplyInfo['apply_user_full_name'] = "";
+                    $organizationApplyInfo['apply_user_avatar_img'] = "";
+                    $organizationApplyInfo['send_user_full_name'] = "";
+                    $organizationApplyInfo['send_user_avatar_img'] = "";
+                    $organizationApplyInfo['apply_user_avatar_img'] = "";
+                    if(isset($organizationApplyInfo['old_organization_id']) && $organizationList[$organizationApplyInfo['old_organization_id']]) {
+                        $organizationApplyInfo['old_organization_title'] = isset($organizationList[$organizationApplyInfo['old_organization_id']]['title']) ?
+                            $organizationList[$organizationApplyInfo['old_organization_id']]['title'] : "";
+                    }
+                    if(isset($organizationApplyInfo['new_organization_id']) && $organizationList[$organizationApplyInfo['new_organization_id']]) {
+                        $organizationApplyInfo['new_organization_title'] = isset($organizationList[$organizationApplyInfo['new_organization_id']]['title']) ?
+                            $organizationList[$organizationApplyInfo['new_organization_id']]['title'] : "";
+                    }
+                    if(isset($organizationApplyInfo['user_id']) && isset($passportList[$organizationApplyInfo['user_id']])) {
+                        $organizationApplyInfo['full_name'] = isset($passportList[$organizationApplyInfo['user_id']]['full_name']) ?
+                            $passportList[$organizationApplyInfo['user_id']]['full_name'] : "";
+                        $organizationApplyInfo['avatar_img'] = isset($passportList[$organizationApplyInfo['user_id']]['avatar_img']) ?
+                            $passportList[$organizationApplyInfo['user_id']]['avatar_img'] : "";
+                    }
+                    if(isset($organizationApplyInfo['submit_user_id']) && isset($passportList[$organizationApplyInfo['submit_user_id']])) {
+                        $organizationApplyInfo['submit_user_full_name'] = isset($passportList[$organizationApplyInfo['submit_user_id']]['full_name']) ?
+                            $passportList[$organizationApplyInfo['submit_user_id']]['full_name'] : "";
+                        $organizationApplyInfo['submit_user_avatar_img'] = isset($passportList[$organizationApplyInfo['submit_user_id']]['avatar_img']) ?
+                            $passportList[$organizationApplyInfo['submit_user_id']]['avatar_img'] : "";
+                    }
+                    if(isset($organizationApplyInfo['apply_user_id']) && isset($passportList[$organizationApplyInfo['apply_user_id']])) {
+                        $organizationApplyInfo['apply_user_full_name'] = isset($passportList[$organizationApplyInfo['apply_user_id']]['full_name']) ?
+                            $passportList[$organizationApplyInfo['apply_user_id']]['full_name'] : "";
+                        $organizationApplyInfo['apply_user_avatar_img'] = isset($passportList[$organizationApplyInfo['apply_user_id']]['avatar_img']) ?
+                            $passportList[$organizationApplyInfo['apply_user_id']]['avatar_img'] : "";
+                    }
+                    if(isset($organizationApplyInfo['send_user_id']) && isset($passportList[$organizationApplyInfo['send_user_id']])) {
+                        $organizationApplyInfo['send_user_full_name'] = isset($passportList[$organizationApplyInfo['send_user_id']]['full_name']) ?
+                            $passportList[$organizationApplyInfo['send_user_id']]['full_name'] : "";
+                        $organizationApplyInfo['send_user_avatar_img'] = isset($passportList[$organizationApplyInfo['send_user_id']]['avatar_img']) ?
+                            $passportList[$organizationApplyInfo['send_user_id']]['avatar_img'] : "";
+                    }
+                }
+            }
+            return BaseService::returnOkData($organizationApplyList);
+        }
+        return $organizationApplyListRet;
     }
 
     /**

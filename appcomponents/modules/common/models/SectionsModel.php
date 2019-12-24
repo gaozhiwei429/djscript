@@ -39,7 +39,7 @@ class SectionsModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=false) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -58,16 +58,6 @@ class SectionsModel extends BaseModel
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
-        if($index) {
-            foreach($projectList as $projectInfo) {
-                if(isset($projectInfo['id']) && $projectInfo['id']) {
-                    $projectListArr[$projectInfo['id']] = $projectInfo;
-                }
-            }
-            if(!empty($projectListArr)) {
-                return $projectListArr;
-            }
-        }
         return $projectList;
     }
     /**
@@ -91,9 +81,9 @@ class SectionsModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,

@@ -133,7 +133,7 @@ class TypeModel extends BaseModel
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//名称
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->describe = isset($addData['describe']) ? trim($addData['describe']) : "";
+            $thisModel->use_id = isset($addData['use_id']) ? intval($addData['use_id']) : 0;
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->parent_id = isset($addData['parent_id']) ? intval($addData['parent_id']) : 0; //父级
             $thisModel->save();

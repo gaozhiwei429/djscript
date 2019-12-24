@@ -58,6 +58,7 @@ class AddrProvinceModel extends BaseModel {
             $thisModel->syn_id = isset($addData['syn_id']) ? trim($addData['syn_id']) : null;
             $thisModel->is_delete = isset($addData['is_delete']) ? trim($addData['is_delete']) : null;
             $thisModel->enable = isset($addData['enable']) ? trim($addData['enable']) : null;
+            $thisModel->code = isset($addData['code']) ? trim($addData['code']) : "";//模型代码
             $thisModel->order_id = isset($addData['order_id']) ? trim($addData['order_id']) : null;
             $thisModel->state_code = isset($addData['state_code']) ? trim($addData['state_code']) : null;
             $thisModel->status = isset($addData['status']) ? trim($addData['status']) : null;
@@ -103,6 +104,24 @@ class AddrProvinceModel extends BaseModel {
         }
     }
     /**
+     * 批量添加文件记录数据
+     * @param $user_id
+     * @param $files
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public static function addAll($datas) {
+        $data = [];
+        $clumns = (isset($datas[0]) && !empty($datas[0])) ? array_keys($datas[0]) : [];
+        if(empty($clumns)) {
+            return false;
+        }
+        foreach ($datas as $k => $v) {
+            $data[] = $v;
+        }
+        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $clumns, $data)->execute();
+    }
+    /**
      * 获取省份数据集
      * @param array $params
      * @param array $orderBy
@@ -111,7 +130,7 @@ class AddrProvinceModel extends BaseModel {
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-	public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=false) {
+	public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -130,17 +149,7 @@ class AddrProvinceModel extends BaseModel {
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
-        $projectListArr = [];
-        if($index) {
-            foreach($projectList as $projectInfo) {
-                if(isset($projectInfo['id']) && $projectInfo['id']) {
-                    $projectListArr[$projectInfo['id']] = $projectInfo;
-                }
-            }
-            if(!empty($projectListArr)) {
-                return $projectListArr;
-            }
-        }
+//        var_dump($query->createCommand()->getRawSql());die;
 //        return $query->createCommand()->getRawSql();
         return $projectList;
     }
@@ -153,9 +162,9 @@ class AddrProvinceModel extends BaseModel {
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,

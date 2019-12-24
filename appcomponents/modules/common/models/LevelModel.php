@@ -57,17 +57,17 @@ class LevelModel extends BaseModel
         if (!empty($orderBy)) {
             $query -> orderBy($orderBy);
         }
-        $projectList = $query->asArray()->all();
+        $dataList = $query->asArray()->all();
         if($index) {
             $dataArr = [];
-            foreach($projectList as $k=>$v) {
+            foreach($dataList as $k=>$v) {
                 if(isset($v['id'])) {
                     $dataArr[$v['id']] = $v;
                 }
             }
-            $projectList = $dataArr;
+            $dataList = $dataArr;
         }
-        return $projectList;
+        return $dataList;
     }
     /**
      * 获取banner首页数据展示

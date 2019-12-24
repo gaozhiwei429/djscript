@@ -11,12 +11,7 @@
  * 注意：本内容仅限于北京往全保科技有限公司内部传阅，禁止外泄以及用于其他的商业目的
  */
 namespace appcomponents\modules\order;
-use appcomponents\modules\common\ProcessServiceService;
-use appcomponents\modules\my\UserProjectService;
-use appcomponents\modules\order\models\OrderDetailModel;
-use appcomponents\modules\order\models\OrderHandModel;
 use appcomponents\modules\order\models\OrderModel;
-use appcomponents\modules\project\ProjectService;
 use source\libs\Common;
 use source\libs\DmpLog;
 use source\manager\BaseException;
@@ -67,11 +62,11 @@ class OrderService extends BaseService
      * @param int $buy_number
      * @param int $pay_from
      * @param int $pay_type 支付方式【1支付宝，2微信，3银联】
-     * @param int $type 订单类型【1普通产品订单、2续租相关的订单、3加工服务相关的订单】
+     * @param int $type 订单类型【1党费、2其他产品】
      * @param int $renewal_id 续租记录id
      * @return array
      */
-    public function addGoodsCar($user_id, $project_id, $buy_number=1, $pay_from=1, $pay_type=0, $type=1, $renewal_id=0) {
+    public function addGoodsCar($user_id, $project_id, $buy_number=1, $pay_from=1, $pay_type=0, $type=1) {
         $orderModel = new OrderModel();
         //获取当前用户的产品再购物车里面是否存在，如果存在那么就追加购买数量即可
         $goodsCarParams = [];
@@ -99,8 +94,6 @@ class OrderService extends BaseService
                 return BaseService::returnErrData([], 55000, "请求参数异常");
             }
         }
-
-        $addData['renewal_id'] = $renewal_id;
         $addData['type'] = $type;
         if($user_id) {
             $addData['user_id'] = $user_id;
@@ -177,31 +170,6 @@ class OrderService extends BaseService
                     return BaseService::returnErrData([], 515700, "你所购买产品不存在");
                 }
             }
-            $addData['renewal_id'] = $renewal_id;
-        } else if($type==3){
-            $addData['buy_number'] = 1;
-            if ($renewal_id) {
-                $projectParams = [];
-                $projectParams[] = ['=', 'id', $renewal_id];
-                $projectService = new ProcessServiceService();
-                $projectInfoRet = $projectService->getInfo($projectParams);
-                if (BaseService::checkRetIsOk($projectInfoRet)) {
-                    $projectInfo = BaseService::getRetData($projectInfoRet);
-                    if (isset($projectInfo['status']) && $projectInfo['status'] == 3) {
-                        return BaseService::returnErrData([], 518700, "当前状态不可支付");
-                    }
-                    if (isset($projectInfo['price'])) {
-                        $addData['price'] = $addData['now_price'] = $addData['old_price'] = floatval($projectInfo['price']);
-                    }
-                    $addData['total_amount'] = $buy_number * $addData['price'];
-                    $addData['title'] = "加工服务订单";
-                    $addData['pay_type'] = $pay_type;
-                    $addData['project_id'] = 0;
-                } else {
-                    return BaseService::returnErrData([], 515700, "您的加工提交记录不存在");
-                }
-            }
-            $addData['process_service_id'] = $renewal_id;
         } else {
             return BaseService::returnErrData([], 516200, "你所购买产品不存在");
         }

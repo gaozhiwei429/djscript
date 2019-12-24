@@ -1,7 +1,7 @@
 <?php
 /**
- * 用户投票记录管理表
- * @文件名称: UserVoteModel.php
+ * 党费缴纳相关
+ * @文件名称: PaidUpModel
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,13 +14,12 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class UserVoteModel extends BaseModel
+class PaidUpModel extends BaseModel
 {
-    const WAIT_APPROVAL_STATUS = 1;//待审批
-    const ALREADY_APPROVAL_STATUS = 2;//已审批
-    const BEFORT_STATUS = 0;//禁用
+    const WAIT_APPROVAL_STATUS = 0;//待审批
+    const ALREADY_APPROVAL_STATUS = 1;//已审批
     public static function tableName() {
-        return '{{%user_vote}}';
+        return '{{%paid_up}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -133,16 +132,13 @@ class UserVoteModel extends BaseModel
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
-            $thisModel->vote_id = isset($addData['vote_id']) ? intval($addData['vote_id']) : 0;
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ALREADY_APPROVAL_STATUS;
+            $thisModel->year = isset($addData['year']) ? intval($addData['year']) : 0;
+            $thisModel->month = isset($addData['month']) ? intval($addData['month']) : 0;
             $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
             $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->full_name = isset($addData['full_name']) ? trim($addData['full_name']) : "";
-            $thisModel->avatar_img = isset($addData['avatar_img']) ? trim($addData['avatar_img']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->user_organization_id = isset($addData['user_organization_id']) ? intval($addData['user_organization_id']) : 0;
-            $thisModel->user_level_id = isset($addData['user_level_id']) ? intval($addData['user_level_id']) : 0;
-            $thisModel->anwser = (isset($addData['anwser']) && is_array($addData['anwser'])) ? json_encode($addData['anwser']) : json_encode([]);
             $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
+            $thisModel->total_fee = isset($addData['total_fee']) ? intval($addData['total_fee']) : 0;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
@@ -169,23 +165,5 @@ class UserVoteModel extends BaseModel
         } catch (BaseException $e) {
             return false;
         }
-    }
-    /**
-     * 批量添加记录数据
-     * @param $user_id
-     * @param $files
-     * @return int
-     * @throws \yii\db\Exception
-     */
-    public function addAll($datas) {
-        $data = [];
-        $clumns = (isset($datas[0]) && !empty($datas[0])) ? array_keys($datas[0]) : [];
-        if(empty($clumns)) {
-            return false;
-        }
-        foreach ($datas as $k => $v) {
-            $data[] = $v;
-        }
-        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $clumns, $data)->execute();
     }
 }

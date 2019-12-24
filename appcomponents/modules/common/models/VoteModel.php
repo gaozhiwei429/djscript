@@ -139,10 +139,12 @@ class VoteModel extends BaseModel
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ALREADY_APPROVAL_STATUS;
             $thisModel->join_people_num = isset($addData['join_people_num']) ? intval($addData['join_people_num']) : 0;//参加人数
             $thisModel->waiver_people_num = isset($addData['waiver_people_num']) ? intval($addData['waiver_people_num']) : 0;//弃权人数
+            $thisModel->pending_people_num = isset($addData['pending_people_num']) ? intval($addData['pending_people_num']) : 0;//待定人数
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
             $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
             $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
             $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
+            $thisModel->type = isset($addData['type']) ? intval($addData['type']) : 0;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

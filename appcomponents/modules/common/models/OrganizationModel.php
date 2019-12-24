@@ -39,7 +39,7 @@ class OrganizationModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=true) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -58,15 +58,6 @@ class OrganizationModel extends BaseModel
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
-        if($index) {
-            $dataArr = [];
-            foreach($projectList as $k=>$v) {
-                if(isset($v['uuid'])) {
-                    $dataArr[$v['uuid']] = $v;
-                }
-            }
-            $projectList = $dataArr;
-        }
         return $projectList;
     }
     /**
@@ -78,8 +69,8 @@ class OrganizationModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=true) {
-        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+    public static function getDataArr($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
+        return $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
     }
     /**
      * 获取分页数据列表
@@ -90,9 +81,18 @@ class OrganizationModel extends BaseModel
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+    public function getList($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
+            if($index) {
+                $dataArr = [];
+                foreach($dataList as $k=>$v) {
+                    if(isset($v['id'])) {
+                        $dataArr[$v['id']] = $v;
+                    }
+                }
+                $dataList = $dataArr;
+            }
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,
@@ -107,6 +107,42 @@ class OrganizationModel extends BaseModel
             return [];
         }
     }
+    /**
+     * 获取分页数据列表
+     * @param array $params
+     * @param array $orderBy
+     * @param int $offset
+     * @param int $limit
+     * @param array $fied
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+        try {
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
+            if($index) {
+                $dataArr = [];
+                foreach($dataList as $k=>$v) {
+                    if(isset($v['uuid'])) {
+                        $dataArr[$v['uuid']] = $v;
+                    }
+                }
+                $dataList = $dataArr;
+            }
+            $data = [
+                'dataList' => $dataList,
+                'count' => 0,
+            ];
+            if(!empty($dataList)) {
+                $count = self::getCount($params);
+                $data['count'] = $count;
+            }
+            return $data;
+//            $query->createCommand()->getRawSql();
+        } catch (BaseException $e) {
+            return [];
+        }
+    }
+
     /**
      * 获取分页数据列表
      * @param array $params
@@ -223,7 +259,6 @@ class OrganizationModel extends BaseModel
             return false;
         }
     }
-
     /**
      * 更新信息数据
      * @param int $id ID
@@ -233,6 +268,26 @@ class OrganizationModel extends BaseModel
     public static function updateInfo($id, $updateInfo) {
         try {
             $datainfo = self::findOne(['id' => $id]);
+            if(!empty($updateInfo)) {
+                foreach($updateInfo as $k=>$v) {
+                    $datainfo->$k = trim($v);
+                }
+                return $datainfo->save();
+            }
+            return false;
+        } catch (BaseException $e) {
+            return false;
+        }
+    }
+    /**
+     * 更新信息数据
+     * @param int $id ID
+     * @param array $updateInfo 需要更新的数据集合
+     * @return bool
+     */
+    public static function updateInfoByUuid($uuid, $updateInfo) {
+        try {
+            $datainfo = self::findOne(['uuid' => $uuid]);
             if(!empty($updateInfo)) {
                 foreach($updateInfo as $k=>$v) {
                     $datainfo->$k = trim($v);

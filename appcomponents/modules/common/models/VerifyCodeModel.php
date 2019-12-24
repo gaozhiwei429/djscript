@@ -58,7 +58,11 @@ class VerifyCodeModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByValue($params){
+    public function getInfoByValue($params, $type=self::MOBILE_TYPE){
+        if(!$type) {
+            $type = self::MOBILE_TYPE;
+        }
+        $params['type'] = $type;
         return $this->getOne($params);
     }
     /**
@@ -68,12 +72,13 @@ class VerifyCodeModel extends BaseModel
      */
     public function addInfo($addData) {
         try {
-            $mobile_overdue_time = isset(Yii::$app->params['sms']['overduetime']) ?
-                Yii::$app->params['sms']['overduetime']*60 : 60*15;
+            $mobile_overdue_time = isset(Yii::$app->params['verify']['moblie']['mobile_overdue_time']) ?
+                Yii::$app->params['verify']['moblie']['mobile_overdue_time'] : 60*15;
             $thisModel = new self();
             $thisModel->code = isset($addData['code']) ? trim($addData['code']) : null;//验证码
             $thisModel->type = isset($addData['type']) ? (int)$addData['type'] : self::MOBILE_TYPE;//验证类型【1邮箱，2手机号，3QQ，4新浪】
             $thisModel->verify_value = isset($addData['verify_value']) ? trim($addData['verify_value']) : '';//验证账号
+            $thisModel->create_time = date('Y-m-d H:i:s');
             $thisModel->isvalid = isset($addData['isvalid']) ? (int)$addData['isvalid'] : self::IS_VALID;//是否已验证【0,已验证无效，1未验证】
             $thisModel->overdue_time = date('Y-m-d H:i:s', time()+$mobile_overdue_time);//短信验证码过期时间
             $thisModel->max_verify_times = isset($addData['max_verify_times']) ? (int)$addData['max_verify_times'] : 1;//每个验证码最大验证次数
@@ -162,6 +167,7 @@ class VerifyCodeModel extends BaseModel
             foreach($data as $k=>$v) {
                 $thisModel->$k = $v;
             }
+            $thisModel->inserttime = time();
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
@@ -183,6 +189,7 @@ class VerifyCodeModel extends BaseModel
                 foreach($updateInfo as $k=>$v) {
                     $datainfo->$k = trim($v);
                 }
+                $datainfo->updatetime = time();
                 return $datainfo->save();
             }
             return false;

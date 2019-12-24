@@ -132,7 +132,7 @@ class DangTodayModel extends BaseModel
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->title   = isset($addData['title']) ? trim($addData['title']) : "党史上的今天";
             $thisModel->pic_url = isset($addData['pic_url']) ? trim($addData['pic_url']) : "";
-            $thisModel->month_and_day = isset($addData['month_and_day']) ? intval($addData['month_and_day']) : "";
+            $thisModel->month_and_day = isset($addData['month_and_day']) ? trim($addData['month_and_day']) : "";
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
 			$thisModel->save();
             return Yii::$app->db->getLastInsertID();

@@ -27,8 +27,8 @@ class NoticeModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByValue($params,$field=['*']){
-        return $this->getOne($params,$field);
+    public function getInfoByValue($params){
+        return $this->getOne($params);
     }
     /**
      * 获取数据集
@@ -140,7 +140,7 @@ class NoticeModel extends BaseModel
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->title = isset($addData['title']) ? trim($addData['title']) : "";//名称
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
-            $thisModel->type_id = isset($addData['type_id']) ? intval($addData['type_id']) : 1;
+            $thisModel->type_id = isset($addData['type_id']) ? intval($addData['type_id']) : 0;
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->content = isset($addData['content']) ? trim($addData['content']) : ""; //文章内容
             $thisModel->pic_url = isset($addData['pic_url']) ? trim($addData['pic_url']) : json_encode([]); //文章图片

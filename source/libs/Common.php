@@ -454,4 +454,13 @@ class Common
         }
         return $isEmail;
     }
+    //秒数转换为时分 get_second_h_m(8000)
+    public static function getSecondHM($v){
+        $h=floor($v/3600);
+        if($h<10){$h='0'.$h;}
+        $t=$v%3600;
+        $m=ceil($t/60);
+        if($m<10){$m='0'.$m;}
+        return $h.".".$m.'小时';
+    }
 }

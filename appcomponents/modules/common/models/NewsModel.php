@@ -27,8 +27,8 @@ class NewsModel extends BaseModel
      * @param int $type
      * @return mixed
      */
-    public function getInfoByValue($params,$field=['*']){
-        return $this->getOne($params,$field);
+    public function getInfoByValue($params){
+        return $this->getOne($params);
     }
     /**
      * 获取数据集
@@ -152,6 +152,7 @@ class NewsModel extends BaseModel
             return false;
         }
     }
+
     /**
      * 更新信息数据
      * @param int $id ID

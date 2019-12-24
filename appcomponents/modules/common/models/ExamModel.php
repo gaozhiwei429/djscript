@@ -155,6 +155,13 @@ class ExamModel extends BaseModel
             $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::ON_LINE_STATUS;
             $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
             $thisModel->overdue_time = isset($addData['overdue_time']) ? trim($addData['overdue_time']) : "";
+            $thisModel->type = isset($addData['type']) ? intval($addData['type']) : 0;
+            $thisModel->examtime = isset($addData['examtime']) ? intval($addData['examtime']) : 0;
+            $thisModel->score = isset($addData['score']) ? floatval($addData['score']) : 0;
+            $thisModel->passscore = isset($addData['passscore']) ? floatval($addData['passscore']) : 0;
+            $thisModel->decide = isset($addData['decide']) ? intval($addData['decide']) : 0;
+            $thisModel->types = (isset($addData['types']) && is_array($addData['types'])) ?
+                json_encode($addData['types']): $addData['types'];
 			$thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

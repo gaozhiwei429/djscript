@@ -103,6 +103,24 @@ class AddrCityModel extends BaseModel {
         }
     }
     /**
+     * 批量添加文件记录数据
+     * @param $user_id
+     * @param $files
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public static function addAll($datas) {
+        $data = [];
+        $clumns = (isset($datas[0]) && !empty($datas[0])) ? array_keys($datas[0]) : [];
+        if(empty($clumns)) {
+            return false;
+        }
+        foreach ($datas as $k => $v) {
+            $data[] = $v;
+        }
+        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $clumns, $data)->execute();
+    }
+    /**
      * 获取城市数据集
      * @param array $params
      * @param array $orderBy
@@ -111,7 +129,7 @@ class AddrCityModel extends BaseModel {
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*'], $index=false) {
+    public static function getDatas($params = [], $orderBy = [], $offset = 0, $limit = 100, $fied=['*']) {
         $query = self::find()->select($fied);
         if(!empty($params)) {
             foreach($params as $k=>$v) {
@@ -130,18 +148,6 @@ class AddrCityModel extends BaseModel {
             $query -> orderBy($orderBy);
         }
         $projectList = $query->asArray()->all();
-
-        $projectListArr = [];
-        if($index) {
-            foreach($projectList as $projectInfo) {
-                if(isset($projectInfo['id']) && $projectInfo['id']) {
-                    $projectListArr[$projectInfo['id']] = $projectInfo;
-                }
-            }
-            if(!empty($projectListArr)) {
-                return $projectListArr;
-            }
-        }
 //        var_dump($query->createCommand()->getRawSql());die;
 //        return $query->createCommand()->getRawSql();
         return $projectList;
@@ -155,9 +161,9 @@ class AddrCityModel extends BaseModel {
      * @param array $fied
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*'], $index=false) {
+    public static function getListData($params = [], $orderBy = [], $offset = 0, $limit = 10, $fied=['*']) {
         try {
-            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied, $index);
+            $dataList = self::getDatas($params, $orderBy, $offset, $limit, $fied);
             $data = [
                 'dataList' => $dataList,
                 'count' => 0,

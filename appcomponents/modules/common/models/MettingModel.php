@@ -140,6 +140,7 @@ class MettingModel extends BaseModel
             $thisModel->join_people_num = isset($addData['join_people_num']) ? intval($addData['join_people_num']) : 0;//参会人数
             $thisModel->leave_people_num = isset($addData['leave_people_num']) ? intval($addData['leave_people_num']) : 0;//请假人数
             $thisModel->late_people_num = isset($addData['late_people_num']) ? intval($addData['late_people_num']) : 0;//迟到人数
+            $thisModel->pending_people_num = isset($addData['pending_people_num']) ? intval($addData['pending_people_num']) : 0;//待定人数
             $thisModel->president_userid = isset($addData['president_userid']) ? trim($addData['president_userid']) : "";//'主持人
             $thisModel->speaker_userid = isset($addData['speaker_userid']) ? trim($addData['speaker_userid']) : "";//主讲人
             $thisModel->metting_type_id = isset($addData['metting_type_id']) ? intval($addData['metting_type_id']) : 0;//会议类型id
@@ -175,5 +176,23 @@ class MettingModel extends BaseModel
         } catch (BaseException $e) {
             return false;
         }
+    }
+    /**
+     * 批量添加记录数据
+     * @param $user_id
+     * @param $files
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function addAll($datas) {
+        $data = [];
+        $clumns = (isset($datas[0]) && !empty($datas[0])) ? array_keys($datas[0]) : [];
+        if(empty($clumns)) {
+            return false;
+        }
+        foreach ($datas as $k => $v) {
+            $data[] = $v;
+        }
+        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), $clumns, $data)->execute();
     }
 }

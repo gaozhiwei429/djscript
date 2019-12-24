@@ -137,6 +137,7 @@ class LessionModel extends BaseModel
             $thisModel->size = isset($addData['size']) ? floatval($addData['size']) : 0;
             $thisModel->format = isset($addData['format']) ? trim($addData['format']) : "";
             $thisModel->sort = isset($addData['sort']) ? intval($addData['sort']) : 0;
+            $thisModel->duration = isset($addData['duration']) ? intval($addData['duration']) : 0;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;

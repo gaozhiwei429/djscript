@@ -1,7 +1,7 @@
 <?php
 /**
- * 用户投票记录管理表
- * @文件名称: UserVoteModel.php
+ * 用户课程记录管理表
+ * @文件名称: UserCourseModel
  * @author: jawei
  * @Email: gaozhiwei429@sina.com
  * @Date: 2017-06-06
@@ -14,13 +14,12 @@ use source\manager\BaseException;
 use source\models\BaseModel;
 use Yii;
 
-class UserVoteModel extends BaseModel
+class UserCourseModel extends BaseModel
 {
-    const WAIT_APPROVAL_STATUS = 1;//待审批
-    const ALREADY_APPROVAL_STATUS = 2;//已审批
-    const BEFORT_STATUS = 0;//禁用
+    const WAIT_STATUS = 0;//待完成
+    const ALREADY_STATUS = 1;//已完
     public static function tableName() {
-        return '{{%user_vote}}';
+        return '{{%user_course}}';
     }
     /**
      * 根据条件获取最后一条信息
@@ -133,16 +132,12 @@ class UserVoteModel extends BaseModel
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
-            $thisModel->vote_id = isset($addData['vote_id']) ? intval($addData['vote_id']) : 0;
-            $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->full_name = isset($addData['full_name']) ? trim($addData['full_name']) : "";
-            $thisModel->avatar_img = isset($addData['avatar_img']) ? trim($addData['avatar_img']) : "";
-            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
-            $thisModel->user_organization_id = isset($addData['user_organization_id']) ? intval($addData['user_organization_id']) : 0;
-            $thisModel->user_level_id = isset($addData['user_level_id']) ? intval($addData['user_level_id']) : 0;
-            $thisModel->anwser = (isset($addData['anwser']) && is_array($addData['anwser'])) ? json_encode($addData['anwser']) : json_encode([]);
-            $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
+            $thisModel->course_id = isset($addData['course_id']) ? intval($addData['course_id']) : 0;
+            $thisModel->status = isset($addData['status']) ? intval($addData['status']) : self::WAIT_STATUS;
+            $thisModel->is_del = isset($addData['is_del']) ? intval($addData['is_del']) : 0;
+            $thisModel->study_lessions_count = isset($addData['study_lessions_count']) ? intval($addData['study_lessions_count']) : 0;
+            $thisModel->lessions_count = isset($addData['lessions_count']) ? intval($addData['lessions_count']) : 0;
+            $thisModel->elective_type = isset($addData['elective_type']) ? intval($addData['elective_type']) : 1;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();
 //            return $isSave;
