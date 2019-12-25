@@ -138,4 +138,36 @@ class UserMettingController extends UserBaseController
         }
         return BaseService::returnOkData([]);
     }
+    /**
+     * 检查当前账号是否参加会议
+     * @return array
+     */
+    public function actionCheckJoin() {
+        if (!isset($this->user_id) || !$this->user_id) {
+            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
+        }
+        $metting_id = intval(Yii::$app->request->post('metting_id', 0));
+        $userMettingService = new UserMettingService();
+        $params = [];
+        if(empty($metting_id)) {
+            return BaseService::returnErrData([], 56600, "请求参数异常");
+        }
+        $mettingService = new MettingService();
+        $mettingParams[] = ['=', 'id', $metting_id];
+        $mettingInfoRet = $mettingService->getInfo($mettingParams);
+        $mettingInfo = [];
+        if(!BaseService::checkRetIsOk($mettingInfoRet)) {
+            return BaseService::returnErrData([], 57400, "请求参数异常");
+        }
+        $mettingInfo = BaseService::getRetData($mettingInfoRet);
+        $params[] = ['=', 'metting_id', $metting_id];
+        $params[] = ['=', 'user_id', $this->user_id];
+        $params[] = ['!=', 'status', 0];
+        $userMettingRet = $userMettingService->getInfo($params);
+        if(BaseService::checkRetIsOk($userMettingRet)) {
+            $userMettingInfo = BaseService::getRetData($userMettingRet);
+            return BaseService::returnOkData($userMettingInfo);
+        }
+        return BaseService::returnErrData([], 517100, "没有参加");
+    }
 }

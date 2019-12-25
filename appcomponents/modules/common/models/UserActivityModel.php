@@ -133,9 +133,14 @@ class UserActivityModel extends BaseModel
             $thisModel = new self();
             $thisModel->id = isset($addData['id']) ? trim($addData['id']) : null;
             $thisModel->user_id = isset($addData['user_id']) ? intval($addData['user_id']) : 0;
-            $thisModel->vote_id = isset($addData['vote_id']) ? intval($addData['vote_id']) : 0;
+            $thisModel->activity_id = isset($addData['activity_id']) ? intval($addData['activity_id']) : 0;
             $thisModel->start_time = isset($addData['start_time']) ? trim($addData['start_time']) : "";
             $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
+            $thisModel->full_name = isset($addData['full_name']) ? trim($addData['full_name']) : "";
+            $thisModel->avatar_img = isset($addData['avatar_img']) ? trim($addData['avatar_img']) : "";
+            $thisModel->end_time = isset($addData['end_time']) ? trim($addData['end_time']) : "";
+            $thisModel->user_organization_id = isset($addData['user_organization_id']) ? intval($addData['user_organization_id']) : 0;
+            $thisModel->user_level_id = isset($addData['user_level_id']) ? intval($addData['user_level_id']) : 0;
             $thisModel->organization_id = isset($addData['organization_id']) ? intval($addData['organization_id']) : 0;
             $thisModel->save();
             return Yii::$app->db->getLastInsertID();

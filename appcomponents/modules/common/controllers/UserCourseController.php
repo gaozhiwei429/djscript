@@ -82,4 +82,5 @@ class UserCourseController extends UserBaseController
             return BaseService::returnOkData($dataList);
         }
     }
+
 }

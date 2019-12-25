@@ -13,6 +13,8 @@ namespace appcomponents\modules\common\controllers;
 use appcomponents\modules\common\OrganizationService;
 use appcomponents\modules\common\UserActivityService;
 use appcomponents\modules\common\ActivityService;
+use appcomponents\modules\common\UserOrganizationService;
+use appcomponents\modules\passport\PassportService;
 use source\controllers\UserBaseController;
 use source\manager\BaseService;
 use Yii;
@@ -35,7 +37,7 @@ class UserActivityController extends UserBaseController
         $size = intval(Yii::$app->request->post('size', 10));
         $newsService = new UserActivityService();
         $params = [];
-//        $params[] = ['!=', 'status', 0];
+        $params[] = ['!=', 'status', 0];
         return $newsService->getList($params, ['id'=>SORT_DESC], $page, $size,['*']);
     }
 
@@ -99,57 +101,66 @@ class UserActivityController extends UserBaseController
      * 详情数据编辑
      * @return array
      */
-    public function actionSubmit() {
+    public function actionJoin() {
         if (!isset($this->user_id) || !$this->user_id) {
             return BaseService::returnErrData([], 5001, "当前账号登陆异常");
         }
-        $id = intval(Yii::$app->request->post('id', 0));
-        $vote_id = intval(Yii::$app->request->post('vote_id', 0));
+        $activity_id = intval(Yii::$app->request->post('activity_id', 0));
         $status = intval(Yii::$app->request->post('status', 0));
-        $organization_id = 0;
         $newsService = new UserActivityService();
-        if(empty($vote_id) || empty($anwser)) {
+        if(empty($activity_id)) {
             return BaseService::returnErrData([], 55900, "提交参数异常");
         }
-		$dataInfo = [];
-        if(!empty($vote_id)) {
+        $dataInfo = [];
+        $activityInfo = [];
+        if(!empty($activity_id)) {
             $voteParams = [];
-            $voteParams[] = ['=', 'id', $vote_id];
+            $voteParams[] = ['=', 'id', $activity_id];
             $voteParams[] = ['=', 'status', 1];
             $voteService = new ActivityService();
             $voteInfoRet = $voteService->getInfo($voteParams);
             $voteInfo = BaseService::getRetData($voteInfoRet);
             if(!empty($voteInfo)){
-                $dataInfo['vote_id'] = isset($voteInfo['id']) ? $voteInfo['id'] : 0;
-                $organization_id = isset($voteInfo['organization_id']) ? $voteInfo['organization_id'] : 0;
+                $dataInfo['activity_id'] = isset($voteInfo['id']) ? $voteInfo['id'] : 0;
             } else {
-                return BaseService::returnErrData([], 512400, "当前投票还未开始");
+                return BaseService::returnErrData([], 512400, "当前活动还未开始");
             }
         } else {
             return BaseService::returnErrData([], 512400, "当前投票不存在");
         }
-        if(!is_array($anwser)) {
-            return BaseService::returnErrData([], 512400, "投票结果参数有误");
-        }
-        if(!empty($id)) {
-            $dataInfo['id'] = $id;
+
+        $userOrganizationService = new UserOrganizationService();
+        $passportService = new PassportService();
+        $userActivityService = new UserActivityService();
+        //获取当前用户所属的党组织id
+        $userOrganizationParams = [];
+        $userOrganizationParams[] = ['=', 'user_id', $this->user_id];
+        $userOrganizationParams[] = ['=', 'status', 1];
+        $userOrganizationInfoRet = $userOrganizationService->getInfo($userOrganizationParams);
+        $userOrganizationInfo = BaseService::getRetData($userOrganizationInfoRet);
+
+        $userInfoParams = [];
+        $userInfoParams[] = ['=', 'user_id', $this->user_id];
+        $passportInfoRet = $passportService->getUserInfoByParams($userInfoParams);
+        $passportInfo = BaseService::getRetData($passportInfoRet);
+        $dataInfo['user_id'] = $this->user_id;
+        $dataInfo['full_name'] = isset($passportInfo['full_name']) ? $passportInfo['full_name'] : "";
+        $dataInfo['avatar_img'] = isset($passportInfo['avatar_img']) ? $passportInfo['avatar_img'] : "";
+        $dataInfo['start_time'] = isset($voteInfo['start_time']) ? $voteInfo['start_time'] : "";
+        $dataInfo['end_time'] = isset($voteInfo['end_time']) ? $voteInfo['end_time'] : "";
+        $dataInfo['organization_id'] = isset($voteInfo['organization_id']) ? $voteInfo['organization_id'] : 0;
+        $dataInfo['user_organization_id'] = isset($userOrganizationInfo['organization_id']) ? $userOrganizationInfo['organization_id'] : 0;
+        $dataInfo['user_level_id'] = isset($userOrganizationInfo['level_id']) ? $userOrganizationInfo['level_id'] : 0;
+        $userActivityParams = [];
+        $userActivityParams[] = ['=', 'user_id', $this->user_id];
+        $userActivityParams[] = ['=', 'activity_id', $activity_id];
+        $userMettingRet = $userActivityService->getInfo($userActivityParams);
+        if(BaseService::checkRetIsOk($userMettingRet)) {
+            $userMetting = BaseService::getRetData($userMettingRet);
+            $dataInfo['id'] = isset($userMetting['id']) ? $userMetting['id'] : 0;
         } else {
             $dataInfo['id'] = 0;
         }
-
-        if(empty($organization_id)) {
-            return BaseService::returnErrData([], 514100, "请提交党组织");
-        } else {
-            $organizationService = new OrganizationService();
-            $organizationParams = [];
-            $organizationParams[] = ['=', 'id', $organization_id];
-            $organizationParams[] = ['!=', 'status', -1];
-            $userOrganizationInfoRet = $organizationService->getInfo($organizationParams);
-            if(!BaseService::checkRetIsOk($userOrganizationInfoRet)) {
-                return BaseService::returnErrData([], 514800, "该党组织不存在，或已下线");
-            }
-        }
-        $dataInfo['organization_id'] = $organization_id;
         if(empty($dataInfo)) {
             return BaseService::returnErrData([], 58000, "提交数据有误");
         }
