@@ -11,7 +11,9 @@
 namespace appcomponents\modules\passport\controllers;
 use appcomponents\modules\common\CommonService;
 use appcomponents\modules\common\MailService;
+use appcomponents\modules\common\OrganizationService;
 use appcomponents\modules\common\SmsService;
+use appcomponents\modules\common\UserOrganizationService;
 use appcomponents\modules\passport\PassportService;
 use source\controllers\UserBaseController;
 use source\libs\Common;
@@ -398,5 +400,57 @@ class UserController extends UserBaseController
             ['create_time_year'=>SORT_DESC,'create_time_month'=>SORT_DESC,'create_time_day'=>SORT_DESC], $p, $size,
             ['nickname','user_id','avatar_img','user_status','create_time_year','create_time_month','create_time_day','full_name'],
             false);
+    }
+    /**
+     * 获取入党纪念数据详情
+     */
+    public function actionGetDangYuanInfo() {
+        if(!isset($this->user_id) || !$this->user_id) {
+            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
+        }
+        $user_id = intval(Yii::$app->request->post('user_id', 0));
+        if(empty($user_id)) {
+            return BaseService::returnErrData([], 541200, "请求参数异常");
+        }
+        $dataInfo = [];
+        $userInfoParams = [];
+        $userInfoParams[] = ['=', 'user_id', $user_id];
+        $passportService = new PassportService();
+        $passportInfoRet = $passportService->getUserInfoByParams($userInfoParams);
+        if(!BaseService::checkRetIsOk($passportInfoRet)) {
+            return $passportInfoRet;
+        }
+        $passportInfo = BaseService::getRetData($passportInfoRet);
+        $dataInfo['user_id'] = $user_id;
+        $dataInfo['full_name'] = isset($passportInfo['full_name']) ? $passportInfo['full_name'] : "";
+        $dataInfo['sex'] = isset($passportInfo['sex']) ? $passportInfo['sex'] : 0;
+        $dataInfo['avatar_img'] = isset($passportInfo['avatar_img']) ? $passportInfo['avatar_img'] : "";
+        $dataInfo['join_organization_date'] = isset($passportInfo['join_organization_date']) ? $passportInfo['join_organization_date'] : "";
+        $dataInfo['apply_organization_date'] = isset($passportInfo['apply_organization_date']) ? $passportInfo['apply_organization_date'] : "";
+        $dataInfo['native_place'] = isset($passportInfo['native_place']) ? $passportInfo['native_place'] : "";
+        $dataInfo['education'] = isset($passportInfo['education']) ? $passportInfo['education'] : "";
+        $dataInfo['nation'] = isset($passportInfo['nation']) ? $passportInfo['nation'] : "";
+        $dataInfo['user_status'] = isset($passportInfo['user_status']) ? $passportInfo['user_status'] : "";
+        $dataInfo['user_organization_title'] = "";
+
+        $userOrganizationService = new UserOrganizationService();
+        //获取当前用户所属的党组织id
+        $userOrganizationParams = [];
+        $userOrganizationParams[] = ['=', 'user_id', $this->user_id];
+        $userOrganizationParams[] = ['=', 'status', 1];
+        $userOrganizationInfoRet = $userOrganizationService->getInfo($userOrganizationParams);
+        $userOrganizationInfo = BaseService::getRetData($userOrganizationInfoRet);
+
+        $organization_id = isset($userOrganizationInfo['organization_id']) ? $userOrganizationInfo['organization_id'] : 0;
+        if(!empty($organization_id)) {
+            $organizationService = new OrganizationService();
+            $organizationParams[] = ['=', 'id', $organization_id];
+            $organizationInfoRet = $organizationService->getInfo($organizationParams);
+            $organizationInfo = BaseService::getRetData($organizationInfoRet);
+            if(isset($organizationInfo['title'])) {
+                $dataInfo['user_organization_title'] = $organizationInfo['title'];
+            }
+        }
+        return BaseService::returnOkData($dataInfo);
     }
 }
