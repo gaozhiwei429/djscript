@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4cdb9383-dcca-4918-bfc9-ebeabb0581f2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserActivityController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserActivityController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/models/UserActivityModel.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/models/UserActivityModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserCourseController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserCourseController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserMettingController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UserMettingController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="4cdb9383-dcca-4918-bfc9-ebeabb0581f2" name="Default" comment="" />
     <ignored path="script.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
