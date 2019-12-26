@@ -35,7 +35,8 @@ class PaidUpController extends UserBaseController
         $size = intval(Yii::$app->request->post('size', 10));
         $newsService = new PaidUpService();
         $params = [];
-        return $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size,['*']);
+        $params[] = ['=', 'user_id', $this->user_id];
+        return $newsService->getList($params, ['id'=>SORT_DESC], $page, $size,['*']);
     }
 
     /**

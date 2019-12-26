@@ -63,6 +63,16 @@ class QuestionModel extends BaseModel
                 if(isset($v['type']) && $v['type']==2) {
                     $v['answer'] = json_decode($v['answer'], true);
                 }
+                if(isset($v['type']) && ($v['type']==1 || $v['type']==2 || $v['type']==3)) {
+                    $v['problem'] = json_decode($v['problem'], true);
+                    foreach($v['problem'] as $problek=>&$problev) {
+                        if($problev=="<p></p>") {
+                            unset($v['problem'][$problek]);
+                        } else {
+//                            $problev = strip_tags($problev);
+                        }
+                    }
+                }
             }
         }
         if($index) {
