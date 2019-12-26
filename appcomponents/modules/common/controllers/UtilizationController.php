@@ -17,14 +17,11 @@ use source\manager\BaseService;
 use Yii;
 class UtilizationController extends UserBaseController
 {
-    /**
-     * 用户登录态基础类验证
-     * @return array
-     */
     public function beforeAction($action){
-    $userToken = $this->userToken();
-    return parent::beforeAction($action);
-}
+        $this->noLogin = false;
+        $userToken = $this->userToken();
+        return parent::beforeAction($action);
+    }
     /**
      * 首页功能列表获取
      * @return array
@@ -34,19 +31,53 @@ class UtilizationController extends UserBaseController
         $size = intval(Yii::$app->request->post('size', -1));
         $type = intval(Yii::$app->request->post('type', 0));
         $utilizationService = new UtilizationService();
+        $data = [
+            'dataList' => [],
+            'count' =>0
+        ];
         $params = [];
         $params[] = ['!=', 'status', 0];
-        if($type) {
-            if($type==1 && $this->user_id) {
-                $userUtilizationService = new UserUtilizationService();
-                $userUtilizationDataRet = $userUtilizationService->getUserUtilizationData($this->user_id);
-                if(BaseService::checkRetIsOk($userUtilizationDataRet)) {
-                    $utilization_ids = BaseService::getRetData($userUtilizationDataRet);
-                    $params[] = ['in', 'id', $utilization_ids];
-                }
-            } else {
-                $params[] = ['=', 'type', $type];
+        if($type==1 && $this->user_id) {
+            $userUtilizationService = new UserUtilizationService();
+            $userUtilizationDataRet = $userUtilizationService->getUserUtilizationData($this->user_id);
+            if(BaseService::checkRetIsOk($userUtilizationDataRet)) {
+                $utilization_ids = BaseService::getRetData($userUtilizationDataRet);
+                $params[] = ['in', 'id', $utilization_ids];
             }
+        } else if($type==0 && $this->user_id){
+            $userParams = [];
+            $userUtilizationService = new UserUtilizationService();
+            $userUtilizationDataRet = $userUtilizationService->getUserUtilizationData($this->user_id);
+            if(BaseService::checkRetIsOk($userUtilizationDataRet)) {
+                $utilization_ids = BaseService::getRetData($userUtilizationDataRet);
+                $userParams[] = ['in', 'id', $utilization_ids];
+            }
+            $indexDataRet = $utilizationService->getList($userParams, ['sort'=>SORT_DESC], $page, $size,['id','title','icon','type']);
+            if(BaseService::checkRetIsOk($indexDataRet)) {
+                $indexData = BaseService::getRetData($indexDataRet);
+                $indexData2 = [];
+                if(isset($indexData['dataList']) && !empty($indexData['dataList'])) {
+                    foreach($indexData['dataList'] as $k=>&$indexDataInfo) {
+                        if(isset($indexDataInfo['type'])) {
+                            $indexDataInfo['type'] = 1;
+                        }
+                    }
+                    $params[] = ['!=', 'type', 1];
+                    $indexDataRet = $utilizationService->getList($params, ['sort'=>SORT_DESC], $page, $size,['id','title','icon','type']);
+                    $indexData2 = BaseService::getRetData($indexDataRet);
+                }
+
+                $data['dataList'] = array_merge(
+                    isset($indexData['dataList']) ? $indexData['dataList'] : [],
+                    isset($indexData2['dataList']) ? $indexData2['dataList'] : [],
+                    isset($data['dataList']) ? $data['dataList'] : []
+                );
+                return BaseService::returnOkData($data);
+            }
+        }
+
+        if($type) {
+            $params[] = ['=', 'type', $type];
         }
         return $utilizationService->getList($params, ['sort'=>SORT_DESC], $page, $size,['id','title','icon','type']);
     }
