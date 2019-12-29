@@ -39,8 +39,13 @@ class FeedbackController extends UserBaseController
         }
         $newsService = new FeedbackService();
         $params = [];
-        $params[] = ['=', 'utilization_flag', $utilization_flag];
-        $params[] = ['=', 'object_id', $object_id];
+		
+        if($utilization_flag) {
+            $params[] = ['=', 'utilization_flag', $utilization_flag];
+        }
+        if($object_id) {
+            $params[] = ['=', 'object_id', $object_id];
+        }
         $params[] = ['!=', 'status', 0];
         return $newsService->getList($params, ['id'=>SORT_DESC], $page, $size,['*']);
     }

@@ -85,7 +85,7 @@ class BaseModel extends ActiveRecord {
      * @params  array   $field      获取的字段,*代表全部
      * @params  array   $orderBy    排序的规则
      */
-    public function getList($where,
+    /*public function getList($where,
                             $lenth = 10, $offset = 0, $field=['*'], $orderBy = [], $groupBy = []) {
         $query = self::find()->select($field);
         if(!empty($where)) {
@@ -116,7 +116,7 @@ class BaseModel extends ActiveRecord {
             DmpLog::error('BaseModel_getList_exception', $e);
             return [];
         }
-    }
+    }*/
 
     /**
      * 添加

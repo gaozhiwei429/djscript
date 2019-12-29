@@ -22,6 +22,7 @@ defined('LOG_FILE_PATH') or define('LOG_FILE_PATH', './runtime/3d-api-script/dat
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',10);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 defined('DMP_IDENTITY') or define('DMP_IDENTITY', 'web');
+//defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', true);
 
 require(__DIR__ . '/../../vendor/autoload.php');
 require(__DIR__ . '/../../vendor/yiisoft/yii2/Yii.php');

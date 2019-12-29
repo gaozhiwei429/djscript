@@ -43,7 +43,9 @@ class CourseController extends UserBaseController
         $params = [];
         $params[] = ['=', 'is_del', 0];
         $params[] = ['=', 'user_id', $this->user_id];
-        $ret = $userCourseService->getList($params, ['id'=>SORT_DESC], $page, $size,['*']);
+        $ret = $userCourseService->getList($params, ['id'=>SORT_DESC], $page, $size,
+            ['id','uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count','study_count']
+        );
         if(BaseService::checkRetIsOk($ret)) {
             $dataList = BaseService::getRetData($ret);
             $courseIds = [];
@@ -102,7 +104,7 @@ class CourseController extends UserBaseController
         if($course_type_id) {
             $params[] = ['=', 'course_type_id', $course_type_id];
         }
-        $courseListRet = $newsService->getList($params, ['id'=>SORT_DESC], $page, $size,['uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count']);
+        $courseListRet = $newsService->getList($params, ['id'=>SORT_DESC], $page, $size,['id','uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count','study_count']);
         if(BaseService::checkRetIsOk($courseListRet)) {
             $courseList = BaseService::getRetData($courseListRet);
             if(!empty($courseList['dataList'])) {
@@ -129,7 +131,7 @@ class CourseController extends UserBaseController
      */
     public function actionGetInfo() {
         $id = trim(Yii::$app->request->post('id', null));
-        if(empty($uuid)) {
+        if(empty($id)) {
             return BaseService::returnErrData([], 54000, "请求参数异常");
         }
         $newsService = new CourseService();

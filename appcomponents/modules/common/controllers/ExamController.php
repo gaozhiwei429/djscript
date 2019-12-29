@@ -149,6 +149,7 @@ class ExamController extends UserBaseController
                     if(isset($questionData['dataList']) && !empty($questionData['dataList'])) {
                         foreach($questionIds as $k=>$v) {
                             if(isset($questionData['dataList'][$v])) {
+                                $questionData['dataList'][$v]['pickedMany'] = [];//前端需要的一个字段
                                 $dataInfo['questionList'][] = $questionData['dataList'][$v];
                             }
                         }
