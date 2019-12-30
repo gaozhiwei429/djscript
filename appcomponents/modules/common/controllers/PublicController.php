@@ -1,12 +1,7 @@
 <?php
 
 namespace appcomponents\modules\common\controllers;
-
-use appcomponents\modules\common\CommonService;
-use appcomponents\modules\common\models\TypeModel;
-use appcomponents\modules\passport\PassportService;
 use source\controllers\BaseController;
-use source\libs\TwoCode;
 use source\libs\WxPay\lib\Jssdk;
 use source\libs\WxPay\lib\WxPayConfig;
 use source\manager\BaseException;

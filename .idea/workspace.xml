@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4cdb9383-dcca-4918-bfc9-ebeabb0581f2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/models/BaseModel.php" afterPath="$PROJECT_DIR$/source/models/BaseModel.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/ExamController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/ExamController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UtilizationController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/UtilizationController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/web/index.php" afterPath="$PROJECT_DIR$/backend/web/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/order/controllers/OrderController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/order/controllers/OrderController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/appcomponents/modules/common/controllers/PublicController.php" afterPath="$PROJECT_DIR$/appcomponents/modules/common/controllers/PublicController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="script.iws" />
@@ -32,91 +30,101 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="UtilizationController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/UtilizationController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="833" max-vertical-offset="2775">
-              <caret line="45" column="13" selection-start-line="45" selection-start-column="13" selection-end-line="45" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CourseController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3474" max-vertical-offset="12250">
-              <caret line="155" column="67" selection-start-line="147" selection-start-column="34" selection-end-line="147" selection-end-column="49" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OrganizationModel.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/OrganizationModel.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="130" max-vertical-offset="7700">
-              <caret line="16" column="37" selection-start-line="16" selection-start-column="37" selection-end-line="16" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ExamController.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ExamController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/ExamController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.60881543" vertical-offset="3333" max-vertical-offset="7700">
-              <caret line="151" column="87" selection-start-line="151" selection-start-column="87" selection-end-line="151" selection-end-column="87" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="4883" max-vertical-offset="7775">
+              <caret line="218" column="51" selection-start-line="218" selection-start-column="51" selection-end-line="218" selection-end-column="51" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SiteController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/backend/controllers/SiteController.php">
+      <file leaf-file-name="ZanModel.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/ZanModel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="925">
-              <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3008" max-vertical-offset="4900">
+              <caret line="144" column="12" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/backend/web/index.php">
+      <file leaf-file-name="ZanService.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/ZanService.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="625" max-vertical-offset="950">
-              <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1149" max-vertical-offset="3650">
+              <caret line="57" column="24" selection-start-line="57" selection-start-column="24" selection-end-line="60" selection-end-column="68" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ForumController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/ForumController.php">
+      <file leaf-file-name="ZanController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/ZanController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1736" max-vertical-offset="5250">
-              <caret line="90" column="33" selection-start-line="90" selection-start-column="33" selection-end-line="90" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.6278755" vertical-offset="561" max-vertical-offset="2850">
+              <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ForumService.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/ForumService.php">
+      <file leaf-file-name="CollectionController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/CollectionController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="629" max-vertical-offset="2400">
-              <caret line="39" column="38" selection-start-line="39" selection-start-column="38" selection-end-line="39" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="779" max-vertical-offset="2875">
+              <caret line="47" column="9" selection-start-line="47" selection-start-column="9" selection-end-line="47" selection-end-column="9" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ForumModel.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/ForumModel.php">
+      <file leaf-file-name="FeedbackController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/FeedbackController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2083" max-vertical-offset="4750">
-              <caret line="84" column="27" selection-start-line="84" selection-start-column="27" selection-end-line="84" selection-end-column="27" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="625" max-vertical-offset="1975">
+              <caret line="44" column="9" selection-start-line="44" selection-start-column="9" selection-end-line="44" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CollectionService.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/CollectionService.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2850" max-vertical-offset="3650">
+              <caret line="132" column="36" selection-start-line="132" selection-start-column="36" selection-end-line="132" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CollectionModel.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/CollectionModel.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="4900">
+              <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PublicController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/PublicController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="475" max-vertical-offset="925">
+              <caret line="19" column="22" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="OrderController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/appcomponents/modules/order/controllers/OrderController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="5325">
+              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -130,13 +138,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/ForumController.php" />
-        <option value="$PROJECT_DIR$/appcomponents/modules/passport/models/UserInfoModel.php" />
-        <option value="$PROJECT_DIR$/appcomponents/modules/passport/models/UserModel.php" />
-        <option value="$PROJECT_DIR$/appcomponents/modules/common/models/LevelModel.php" />
-        <option value="$PROJECT_DIR$/appcomponents/modules/common/models/OrganizationModel.php" />
-        <option value="$PROJECT_DIR$/appcomponents/modules/passport/PassportService.php" />
-        <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/DangyuanController.php" />
         <option value="$PROJECT_DIR$/appcomponents/modules/common/LevelService.php" />
         <option value="$PROJECT_DIR$/appcomponents/modules/common/DangyuanService.php" />
         <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/UploadController.php" />
@@ -180,7 +181,14 @@
         <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/UtilizationController.php" />
         <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/CourseController.php" />
         <option value="$USER_HOME$/Desktop/index.html" />
+        <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/PublicController.php" />
+        <option value="$PROJECT_DIR$/appcomponents/modules/order/controllers/OrderController.php" />
         <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/ExamController.php" />
+        <option value="$PROJECT_DIR$/appcomponents/modules/common/ZanService.php" />
+        <option value="$PROJECT_DIR$/appcomponents/modules/common/models/ZanModel.php" />
+        <option value="$PROJECT_DIR$/appcomponents/modules/common/CollectionService.php" />
+        <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/CollectionController.php" />
+        <option value="$PROJECT_DIR$/appcomponents/modules/common/controllers/ZanController.php" />
       </list>
     </option>
   </component>
@@ -217,6 +225,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -353,7 +362,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -416,9 +424,9 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.128125" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.115625" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.204375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.193125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -454,83 +462,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/OrganizationApplyModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="475" max-vertical-offset="6025">
-          <caret line="19" column="34" selection-start-line="19" selection-start-column="34" selection-end-line="20" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/UserExamService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1404" max-vertical-offset="2325">
-          <caret line="79" column="39" selection-start-line="79" selection-start-column="39" selection-end-line="79" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/UserVoteService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1404" max-vertical-offset="2325">
-          <caret line="79" column="41" selection-start-line="79" selection-start-column="41" selection-end-line="79" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/VoteController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4525">
-          <caret line="19" column="42" selection-start-line="19" selection-start-column="42" selection-end-line="22" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/OrganizationController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="249" max-vertical-offset="2175">
-          <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/order/OrderService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2625" max-vertical-offset="14700">
-          <caret line="171" column="13" selection-start-line="171" selection-start-column="13" selection-end-line="171" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/ZhuantiController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="124" max-vertical-offset="4000">
-          <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="23" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/PaidUpModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2983" max-vertical-offset="4375">
-          <caret line="140" column="101" selection-start-line="140" selection-start-column="101" selection-end-line="140" selection-end-column="101" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/ActivityModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3008" max-vertical-offset="4500">
-          <caret line="140" column="131" selection-start-line="140" selection-start-column="131" selection-end-line="141" selection-end-column="134" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/VoteModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3008" max-vertical-offset="4500">
-          <caret line="141" column="134" selection-start-line="141" selection-start-column="134" selection-end-line="141" selection-end-column="134" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/UserMettingModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.405954" vertical-offset="300" max-vertical-offset="4450">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/MettingModel.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3008" max-vertical-offset="4650">
@@ -693,13 +624,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/FeedbackController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="825" max-vertical-offset="1850">
-          <caret line="44" column="32" selection-start-line="44" selection-start-column="32" selection-end-line="44" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/FeedbackService.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="633" max-vertical-offset="2700">
@@ -780,7 +704,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1858" max-vertical-offset="8825">
           <caret line="87" column="6" selection-start-line="87" selection-start-column="6" selection-end-line="87" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -815,10 +738,106 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/source/libs/WxPay/lib/Jssdk.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1575" max-vertical-offset="3500">
+          <caret line="81" column="42" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/standard_4.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3328823" vertical-offset="20204" max-vertical-offset="27375">
+          <caret line="818" column="9" selection-start-line="818" selection-start-column="9" selection-end-line="818" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/pay/controllers/PayController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="8550">
+          <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/order/controllers/OrderController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="5325">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/PublicController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="925">
+          <caret line="19" column="22" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/ExamController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.60881543" vertical-offset="3333" max-vertical-offset="7700">
-          <caret line="151" column="87" selection-start-line="151" selection-start-column="87" selection-end-line="151" selection-end-column="87" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="4883" max-vertical-offset="7775">
+          <caret line="218" column="51" selection-start-line="218" selection-start-column="51" selection-end-line="218" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/ZanModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3008" max-vertical-offset="4900">
+          <caret line="144" column="12" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/ZanService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1149" max-vertical-offset="3650">
+          <caret line="57" column="24" selection-start-line="57" selection-start-column="24" selection-end-line="60" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/CollectionService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2850" max-vertical-offset="3650">
+          <caret line="132" column="36" selection-start-line="132" selection-start-column="36" selection-end-line="132" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/models/CollectionModel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="4900">
+          <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/FeedbackController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="625" max-vertical-offset="1975">
+          <caret line="44" column="9" selection-start-line="44" selection-start-column="9" selection-end-line="44" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/CollectionController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="779" max-vertical-offset="2875">
+          <caret line="47" column="9" selection-start-line="47" selection-start-column="9" selection-end-line="47" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appcomponents/modules/common/controllers/ZanController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6278755" vertical-offset="561" max-vertical-offset="2850">
+          <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
           <folding />
         </state>
       </provider>

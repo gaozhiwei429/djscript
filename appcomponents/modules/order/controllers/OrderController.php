@@ -13,7 +13,6 @@ use appcomponents\modules\common\CommonService;
 use appcomponents\modules\order\OrderService;
 use appcomponents\modules\order\RefundService;
 use appcomponents\modules\pay\PayService;
-use appcomponents\modules\project\ProjectService;
 use source\controllers\UserBaseController;
 use source\libs\DmpLog;
 use source\manager\BaseService;
@@ -29,7 +28,12 @@ class OrderController extends UserBaseController
         $userToken = $this->userToken();
         return parent::beforeAction($action);
     }
+    public function actionDangOrder() {
+        if(!isset($this->user_id) || !$this->user_id) {
+            return BaseService::returnErrData('', 5001, "登陆状态已失效");
+        }
 
+    }
     /**
      * 用户加入产品到购物车中
      * @return array

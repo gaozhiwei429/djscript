@@ -176,6 +176,9 @@ class ExamController extends UserBaseController
         if(empty($types) || !is_array($types)) {
             return BaseService::returnErrData([], 517100, "请求参数异常");
         }
+        if(isset($types[0]) && is_array($types[0]) && !empty($types[0])) {
+            $types = $types[0];
+        }
         $examService = new ExamService();
         $params = [];
         $params[] = ['=', 'id', $exam_id];
