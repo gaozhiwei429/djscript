@@ -423,6 +423,7 @@ class UserController extends UserBaseController
         $passportInfo = BaseService::getRetData($passportInfoRet);
         $dataInfo['user_id'] = $user_id;
         $dataInfo['full_name'] = isset($passportInfo['full_name']) ? $passportInfo['full_name'] : "";
+        $dataInfo['utilization_flag'] = isset($passportInfo['utilization_flag']) ? $passportInfo['utilization_flag'] : 0;
         $dataInfo['sex'] = isset($passportInfo['sex']) ? $passportInfo['sex'] : 0;
         $dataInfo['avatar_img'] = isset($passportInfo['avatar_img']) ? $passportInfo['avatar_img'] : "";
         $dataInfo['join_organization_date'] = isset($passportInfo['join_organization_date']) ? $passportInfo['join_organization_date'] : "";
