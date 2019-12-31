@@ -178,4 +178,35 @@ class UserVoteController extends UserBaseController
         $dataInfo['status'] = $status;
         return $newsService->editInfo($dataInfo);
     }
+
+    /**
+     * 检查当前账号是否参加投票
+     * @return array
+     */
+    public function actionCheckJoin() {
+        if (!isset($this->user_id) || !$this->user_id) {
+            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
+        }
+        $vote_id = intval(Yii::$app->request->post('vote_id', 0));
+        $userMettingService = new UserVoteService();
+        $params = [];
+        if(empty($activity_id)) {
+            return BaseService::returnErrData([], 56600, "请求参数异常");
+        }
+        $mettingService = new VoteService();
+        $mettingParams[] = ['=', 'id', $vote_id];
+        $mettingInfoRet = $mettingService->getInfo($mettingParams);
+        if(!BaseService::checkRetIsOk($mettingInfoRet)) {
+            return BaseService::returnErrData([], 57400, "请求参数异常");
+        }
+        $params[] = ['=', 'activity_id', $vote_id];
+        $params[] = ['=', 'user_id', $this->user_id];
+        $params[] = ['!=', 'status', 0];
+        $userMettingRet = $userMettingService->getInfo($params);
+        if(BaseService::checkRetIsOk($userMettingRet)) {
+            $userMettingInfo = BaseService::getRetData($userMettingRet);
+            return BaseService::returnOkData($userMettingInfo);
+        }
+        return BaseService::returnErrData([], 517100, "没有参加");
+    }
 }
