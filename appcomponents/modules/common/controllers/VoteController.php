@@ -48,7 +48,15 @@ class VoteController extends UserBaseController
         $id = intval(Yii::$app->request->post('id', 0));
         $newsService = new VoteService();
         $params[] = ['=', 'id', $id];
-        return $newsService->getInfo($params);
+        $dataRet = $newsService->getInfo($params);
+        if(BaseService::checkRetIsOk($dataRet)) {
+            $data = BaseService::getRetData($dataRet);
+            if(isset($data['content'])) {
+                $data['content'] = json_decode($data['content'], true);
+            }
+            return BaseService::returnOkData($data);
+        }
+        return $dataRet;
     }
 
     /**
