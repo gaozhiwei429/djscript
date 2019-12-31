@@ -44,7 +44,7 @@ class CourseController extends UserBaseController
         $params[] = ['=', 'is_del', 0];
         $params[] = ['=', 'user_id', $this->user_id];
         $ret = $userCourseService->getList($params, ['id'=>SORT_DESC], $page, $size,
-            ['id','uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count','study_count']
+            ['*']
         );
         if(BaseService::checkRetIsOk($ret)) {
             $dataList = BaseService::getRetData($ret);
@@ -59,7 +59,7 @@ class CourseController extends UserBaseController
                     $courseService = new CourseService();
                     $courseParams[] = ['in', 'id', $courseIds];
                     $courseListRet = $courseService->getList($courseParams, [], 1, count($courseIds),
-                        ['id','title', 'pic_url', 'sections_count', 'lessions_count', 'elective_type'], true
+            ['id','uuid','title','course_type_id','content','pic_url','elective_type','sections_count','lessions_count','study_count'], true
                     );
                     if(BaseService::checkRetIsOk($courseListRet)) {
                         $courseListData = BaseService::getRetData($courseListRet);
