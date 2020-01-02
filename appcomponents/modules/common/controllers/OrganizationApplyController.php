@@ -221,9 +221,12 @@ class OrganizationApplyController extends  UserBaseController
         $sex = intval(Yii::$app->request->post('sex',  0));
         $age = intval(Yii::$app->request->post('age',  0));
         $nation = trim(Yii::$app->request->post('nation',  ""));
-        $uuid = trim(Yii::$app->request->post('uuid', ""));
         $user_status = intval(Yii::$app->request->post('user_status',  0));
         $mobile = trim(Yii::$app->request->post('mobile', ""));
+        $paid_up_date = Yii::$app->request->post('paid_up_date', "");
+        if(is_array($paid_up_date)) {
+            return BaseService::returnErrData([], 522900, "党费缴纳至月份提交数据不合法");
+        }
         $paid_up_date = trim(Yii::$app->request->post('paid_up_date', ""));
         $apply_user_id = intval(Yii::$app->request->post('apply_user_id',  0));
         $send_user_id = intval(Yii::$app->request->post('send_user_id',  0));

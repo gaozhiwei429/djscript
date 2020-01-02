@@ -51,6 +51,16 @@ class DangHistoryController extends UserBaseController
         if(empty($dang_today_id)) {
             return BaseService::returnErrData([], 500, "请求参数异常");
         }
+        $dangTodayInfo = [];
+        $dangTodayService = new DangTodayService();
+        $dangTodayParams[] = ['=', 'id', $dang_today_id];
+        $dangTodayParams[] = ['!=', 'status', 0];
+        $dangTodayInfoRet = $dangTodayService->getInfo($dangTodayParams);
+        if(BaseService::checkRetIsOk($dangTodayInfoRet)) {
+            $dangTodayInfo = BaseService::getRetData($dangTodayInfoRet);
+        } else{
+            return $dangTodayInfoRet;
+        }
         $bannerService = new DangHistoryService();
         $params = [];
         $month = intval(date("m"));
@@ -59,7 +69,19 @@ class DangHistoryController extends UserBaseController
         $params[] = ['=', 'month', $month];
         $params[] = ['=', 'day', $day];
         $params[] = ['=', 'dang_today_id', $dang_today_id];
-        return $bannerService->getList($params, ['sort'=>SORT_DESC,'id'=>SORT_ASC], 1, -1,['id','month','day','title','content']);
+        $dataArr = [
+            'info' => $dangTodayInfo,
+            'dataList' => [],
+        ];
+        $dataArrRet = $bannerService->getList($params, ['sort'=>SORT_DESC,'id'=>SORT_ASC], 1, -1,['id','month','day','title','content']);
+        if(BaseService::checkRetIsOk($dataArrRet)) {
+            $dataArrData = BaseService::getRetData($dataArrRet);
+            if(isset($dataArrData['dataList']) && !empty($dataArrData['dataList'])) {
+                $dataArr['dataList'] = $dataArrData['dataList'];
+            }
+            return BaseService::returnOkData($dataArr);
+        }
+        return $dataArrRet;
     }
 
     /**
