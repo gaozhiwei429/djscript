@@ -37,8 +37,8 @@ class ZhuantiController extends UserBaseController
 
         $params = [];
         $newsService = new ZhuantiService();
-        if($utilization_id && !$zhuanti_type_id) {
-            $typeIds = [];
+        $typeIds = [];
+        if($utilization_id) {
             $zhuantiTypeService = new ZhuantiTypeService();
             $zhuantiTypeParams[] = ['=', 'utilization_id', $utilization_id];
             $zhuantiTypeDataListRet = $zhuantiTypeService->getList($zhuantiTypeParams,[],1,-1,['id']);
@@ -52,11 +52,19 @@ class ZhuantiController extends UserBaseController
                     }
                 }
             }
-            if(!empty($typeIds)) {
-                $params[] = ['in', 'zhuanti_type_id', $typeIds];
-            }
         }
-
+        if(is_array($typeIds)){
+            if(in_array($zhuanti_type_id, $typeIds)) {
+                $params[] = ['=', 'zhuanti_type_id', $zhuanti_type_id];
+            } else if(!empty($typeIds) && !$zhuanti_type_id){
+                $params[] = ['in', 'zhuanti_type_id', $typeIds];
+            } else {
+                $params[] = ['=', 'zhuanti_type_id', $zhuanti_type_id];
+            }
+        } else{
+            $params[] = ['=', 'zhuanti_type_id', $zhuanti_type_id];
+        }
+        $params[] = ['!=', 'status', 0];
         return $newsService->getList($params, ['sort'=>SORT_DESC], $page, $size, ['id','title','pic_url', 'zhuanti_type_id','create_time']);
     }
 

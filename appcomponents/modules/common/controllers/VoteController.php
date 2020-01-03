@@ -51,7 +51,7 @@ class VoteController extends UserBaseController
         $dataRet = $newsService->getInfo($params);
         if(BaseService::checkRetIsOk($dataRet)) {
             $data = BaseService::getRetData($dataRet);
-            if(isset($data['content'])) {
+            if(isset($data['content']) && !empty($data['content'])) {
                 $data['content'] = json_decode($data['content'], true);
             }
             return BaseService::returnOkData($data);

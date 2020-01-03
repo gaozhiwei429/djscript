@@ -56,9 +56,9 @@ class UploadController extends UserBaseController
      * @return array
      */
     public function actionAliFile() {
-        if(!isset($this->user_id) || !$this->user_id) {
-            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
-        }
+//        if(!isset($this->user_id) || !$this->user_id) {
+//            return BaseService::returnErrData([], 5001, "当前账号登陆异常");
+//        }
         $commonService = new CommonService();
         $local_path = "";
         $key = "";
