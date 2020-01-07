@@ -215,6 +215,7 @@ class OrganizationApplyController extends  UserBaseController
             return BaseService::returnErrData([], 5001, "当前账号登陆异常");
         }
         $area_type = intval(Yii::$app->request->post('area_type', 0));
+        $user_id = intval(Yii::$app->request->post('user_id', 0));
         $type = intval(Yii::$app->request->post('type',  0));
         $old_organization_id = intval(Yii::$app->request->post('old_organization_id',  0));
         $new_organization_id = intval(Yii::$app->request->post('new_organization_id',  0));
@@ -319,6 +320,17 @@ class OrganizationApplyController extends  UserBaseController
                 return BaseService::returnErrData([], 520800, "抄送人不存在");
             }
         }
+        if(empty($user_id)) {
+            return BaseService::returnErrData([], 520100, "请选择申请人");
+        } else {
+            $userOrganizationParams = [];
+            $userOrganizationParams[] = ['=', 'user_id', $user_id];
+            $userOrganizationParams[] = ['=', 'status', 1];
+            $userOrganizationInfoRet = $userOrganizationService->getInfo($userOrganizationParams);
+            if(!BaseService::checkRetIsOk($userOrganizationInfoRet)) {
+                return BaseService::returnErrData([], 520800, "申请人不存在");
+            }
+        }
         $dataInfo['send_user_id'] = $send_user_id;
         if(empty($old_organization_address)) {
             return BaseService::returnErrData([], 521300, "请输入原所在基层党委通讯地址");
@@ -339,7 +351,8 @@ class OrganizationApplyController extends  UserBaseController
             return BaseService::returnErrData([], 522800, "介绍信数据不合法");
         }
         $dataInfo['recommendation'] = $recommendation;
-        $dataInfo['user_id'] = $this->user_id;
+        $dataInfo['user_id'] = $user_id;
+        $dataInfo['submit_user_id'] = $this->user_id;
         return $organizationApplyService->editInfo($dataInfo);
     }
 }

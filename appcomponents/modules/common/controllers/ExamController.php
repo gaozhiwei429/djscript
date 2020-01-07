@@ -213,6 +213,7 @@ class ExamController extends UserBaseController
                         foreach($dataInfo['questionList'] as $k=>&$v) {
                             $v['exam_answer'] = "";
                             $v['exam_correct'] = 0;
+                            $v['score'] = 0;
                             if($v['type']==2) {
                                 $v['exam_answer'] = [];
                             }
@@ -224,6 +225,7 @@ class ExamController extends UserBaseController
                             }
                             if($v['answer'] == $v['exam_answer']) {
                                 $v['exam_correct'] = 1;
+                                $v['score'] = isset($dataInfo['types'][$v['type']]['score']) ? $dataInfo['types'][$v['type']]['score'] : 0;
                                 $subjective_score +=$dataInfo['types'][$v['type']]['score'];
                             }
                         }
